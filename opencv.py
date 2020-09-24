@@ -12,16 +12,18 @@ class opencv():
         self.cv2 = cv2
         self.storage = storage
 
-        storage.thumbnail = self.cv2.imread(storage.thumbnailpath,0)
+        self.sift = self.cv2.xfeatures2d.SIFT_create()
+        self.kp1, self.des1 = self.sift.detectAndCompute(self.cv2.imread(storage.thumbnailpath,0),None)
 
         #SETUP
         pass
 
     def core(self, storage, vidimg, frame):
         #img = self.cv2.imread(vidimg,0)
-        sift = self.cv2.xfeatures2d.SIFT_create()
+        sift = self.sift
 
-        kp1, des1 = sift.detectAndCompute(self.storage.thumbnail,None)
+        kp1 = self.kp1
+        des1 = self.des1
         kp2, des2 = sift.detectAndCompute(vidimg,None)
 
         FLANN_INDEX_KDTREE = 0
@@ -57,7 +59,7 @@ class opencv():
             else: storage.vidsf.update({str(rtn): [frame]})
         except:
             storage.vids.update({str(frame): 0})
-            if str(0) in storage.vids: storage.vidsf[str(0)].append(frame)
+            if str(0) in storage.vidsf: storage.vidsf[str(0)].append(frame)
             else: storage.vidsf.update({str(0): [frame]})
 
     def imgparse(self):
