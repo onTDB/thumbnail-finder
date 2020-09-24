@@ -59,6 +59,7 @@ class opencv():
     def imgparse(self):
         vc = self.cv2.VideoCapture(self.storage.vidpath)
         vids = {}
+        vidsf = {}
 
         forfps = int(vc.get(self.cv2.CAP_PROP_FPS)) # video의 fps 가져옴
         if self.storage.debug == True:
@@ -71,24 +72,29 @@ class opencv():
             print("Nowfps: "+str(vc.get(1)))
             ret, img = vc.read()
             
-            if int(vc.get(1)) == 4232: 
-                from matplotlib import pyplot as plt
-                plt.imshow(img,),plt.show()
-                exit()
+            #if int(vc.get(1)) == 4232: 
+            #    from matplotlib import pyplot as plt
+            #    plt.imshow(img,),plt.show()
+            #    exit()
 
 
-            #if self.storage.debug == True:
-            #    print("forfps: "+str(forfps))
-            #    print("isOpened: "+str(vc.isOpened()))
-            #    print("Nowfps: "+str(vc.get(1)))
-            #    print("\n\n")
-            #if (int(vc.get(1)) % forfps == 0): 
-            #    print("Nowfps: "+str(vc.get(1)))
-            #    vids.update({str(vc.get(1)): self.core(img)})
-            #
-            #if int(vc.get(1)) == int(vc.get(self.cv2.CAP_PROP_FRAME_COUNT)): break
+            if self.storage.debug == True:
+                print("forfps: "+str(forfps))
+                print("isOpened: "+str(vc.isOpened()))
+                print("Nowfps: "+str(vc.get(1)))
+                print("\n\n")
+            if (int(vc.get(1)) % forfps == 0): 
+                print("Nowfps: "+str(vc.get(1)))
+                imgu = self.core(img)
+                imgf = int(vc.get(1))
+                vids.update({str(imgf): imgu})
+                vidsf.update({str(imgu): imgf})
+            
+            if int(vc.get(1)) == int(vc.get(self.cv2.CAP_PROP_FRAME_COUNT)): break
         
         print(vids)
+        print("\n\n")
+        print(vidsf)
 
 
 
