@@ -12,16 +12,17 @@ class opencv():
         self.cv2 = cv2
         self.storage = storage
 
-        storage.thumbnail = self.cv2.imread(storage.thumbnailpath,0)
+        self.sift = self.cv2.xfeatures2d.SIFT_create()
+        self.kp1, self.des1 = self.sift.detectAndCompute(self.cv2.imread(storage.thumbnailpath,0),None)
 
         #SETUP
         pass
 
-    def core(self, vidimg):
-        #img = self.cv2.imread(vidimg,0)
-        sift = self.cv2.xfeatures2d.SIFT_create()
+    def core(self, storage, vidimg, frame):
+        sift = self.sift
 
-        kp1, des1 = sift.detectAndCompute(self.storage.thumbnail,None)
+        kp1 = self.kp1
+        des1 = self.des1
         kp2, des2 = sift.detectAndCompute(vidimg,None)
 
         FLANN_INDEX_KDTREE = 0
@@ -52,14 +53,20 @@ class opencv():
                 from matplotlib import pyplot as plt
                 plt.imshow(img3,),plt.show()
 
-            return rtn
+            storage.vids.update({str(frame): rtn})
+            if str(rtn) in storage.vids: storage.vidsf[str(rtn)].append(frame)
+            else: storage.vidsf.update({str(rtn): [frame]})
         except:
-            return 0
+            storage.vids.update({str(frame): 0})
+            if str(0) in storage.vidsf: storage.vidsf[str(0)].append(frame)
+            else: storage.vidsf.update({str(0): [frame]})
 
     def imgparse(self):
+        from threading import Thread
         vc = self.cv2.VideoCapture(self.storage.vidpath)
-        vids = {}
-        vidsf = {}
+        self.storage.vids = {}
+        self.storage.vidsf = {}
+        threads = []
 
         forfps = int(vc.get(self.cv2.CAP_PROP_FPS)) # video의 fps 가져옴
         if self.storage.debug == True:
@@ -67,9 +74,10 @@ class opencv():
             print("isOpened: "+str(vc.isOpened()))
             print("Nowfps: "+str(vc.get(1)))
             print("\n\n")
+        
+        
 
         while True:
-            print("Nowfps: "+str(vc.get(1)))
             ret, img = vc.read()
             
             #if int(vc.get(1)) == 4232: 
@@ -84,25 +92,35 @@ class opencv():
                 print("Nowfps: "+str(vc.get(1)))
                 print("\n\n")
             if (int(vc.get(1)) % forfps == 0): 
-                print("Nowfps: "+str(vc.get(1)))
-                imgu = self.core(img)
-                imgf = int(vc.get(1))
-                vids.update({str(imgf): imgu})
-                vidsf.update({str(imgu): imgf})
-            
+                #print("Nowfps: "+str(vc.get(1)))
+                tmp = Thread(target=self.core, args=(self.storage, img, vc.get(1),))
+                tmp.start()
+                threads.append(tmp)
+                #self.core(self.storage, img, vc.get(1))
+
             if int(vc.get(1)) == int(vc.get(self.cv2.CAP_PROP_FRAME_COUNT)): break
+
+        i = 0
+        while True:
+            #print(i)
+            if i == len(threads): break
+            threads[i].join()
+            i += 1
         
-        print(vids)
+        print(self.storage.vids)
         print("\n\n")
-        print(vidsf)
+        print(self.storage.vidsf)
 
 
 
 if __name__ == "__main__":
+    import time
+    a = time.time()
+
     tpath = "./testmov/thumbnail_32si5cfrCNc.jpg"
     vpath = "./testmov/32si5cfrCNc.mp4"
     storage = storage(thumbnailpath=tpath, vidpath=vpath)
     storage.opencv.imgparse()
 
-
+    print(time.time()-a)
     pass
