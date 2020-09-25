@@ -79,7 +79,7 @@ class opencv():
         
 
         while True:
-            print("Nowfps: "+str(vc.get(1)))
+            #print("Nowfps: "+str(vc.get(1)))
             ret, img = vc.read()
             
             #if int(vc.get(1)) == 4232: 
@@ -94,7 +94,7 @@ class opencv():
                 print("Nowfps: "+str(vc.get(1)))
                 print("\n\n")
             if (int(vc.get(1)) % forfps == 0): 
-                print("Nowfps: "+str(vc.get(1)))
+                #print("Nowfps: "+str(vc.get(1)))
                 tmp = Thread(target=self.core, args=(self.storage, img, vc.get(1),))
                 tmp.start()
                 threads.append(tmp)
@@ -104,7 +104,7 @@ class opencv():
 
         i = 0
         while True:
-            print(i)
+            #print(i)
             if i == len(threads): break
             threads[i].join()
             i += 1
@@ -116,10 +116,13 @@ class opencv():
 
 
 if __name__ == "__main__":
+    import time
+    a = time.time()
+
     tpath = "./testmov/thumbnail_32si5cfrCNc.jpg"
     vpath = "./testmov/32si5cfrCNc.mp4"
     storage = storage(thumbnailpath=tpath, vidpath=vpath)
     storage.opencv.imgparse()
 
-
+    print(time.time()-a)
     pass
