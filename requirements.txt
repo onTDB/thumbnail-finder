@@ -4,3 +4,5 @@ opencv-contrib-python==3.4.2.16
 parse
 pip
 youtube-dl
+flask
+flask_compress
