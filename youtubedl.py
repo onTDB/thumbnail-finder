@@ -9,7 +9,7 @@ class ytdl(Exception):
     def download(self):
         from os import system
         try:
-            system("youtube-dl --no-warnings --no-playlist -o '%(id)' {url}")
+            system("youtube-dl --no-warnings -F -f 160 -o %(id)s.%(ext)s {url}")
         except:
             raise ChildProcessError
     
@@ -28,3 +28,5 @@ class ytdl(Exception):
 
         self.parsedurl = "https://youtu.be/"+self.vid
         return self.parsedurl
+
+    
