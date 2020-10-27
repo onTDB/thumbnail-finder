@@ -1,5 +1,6 @@
 class cvstorage():
     def __init__(self, sto, thumbnailpath, vidpath):
+        self.count = []
         self.mainstorage = sto
         self.thumbnailpath = thumbnailpath
         self.vidpath = vidpath
@@ -15,7 +16,9 @@ class tempstr():
 
 class storage():
     def __init__(self, thumbnailpath, vidpath):
-        self.thumbnailpath = tempstr()
+        self.count = []
+        self.mainstorage = tempstr()
+        self.thumbnailpath = thumbnailpath
         self.vidpath = vidpath
         self.thumbnail = None
         self.opencv = opencv(self)
@@ -23,8 +26,8 @@ class storage():
 
 class opencv():
     def __init__(self, storage):
-        self.cv2 = self.storage.mainstorage.cv2
         self.storage = storage
+        self.cv2 = self.storage.mainstorage.cv2
 
         self.sift = self.storage.mainstorage.sift
         self.kp1, self.des1 = self.sift.detectAndCompute(self.cv2.imread(storage.thumbnailpath,0),None)
@@ -69,12 +72,16 @@ class opencv():
                 plt.imshow(img3,),plt.show()
 
             storage.vids.update({str(frame): rtn})
-            if str(rtn) in storage.vids: storage.vidsf[str(rtn)].append(frame)
+            if str(rtn) in storage.vidsf: storage.vidsf[str(rtn)].append(frame)
             else: storage.vidsf.update({str(rtn): [frame]})
+            if rtn in storage.count: pass
+            else: storage.count.append(rtn)
         except:
             storage.vids.update({str(frame): 0})
             if str(0) in storage.vidsf: storage.vidsf[str(0)].append(frame)
             else: storage.vidsf.update({str(0): [frame]})
+            if 0 in storage.count: pass
+            else: storage.count.append(0)
 
     def imgparse(self):
         from threading import Thread
@@ -122,9 +129,12 @@ class opencv():
             threads[i].join()
             i += 1
         
+        self.storage.count.sort(reverse=True)
         print(self.storage.vids)
         print("\n\n")
         print(self.storage.vidsf)
+        print("\n\n")
+        print("{frame} is the best. maches: {maches}".format(frame=self.storage.vidsf[str(self.storage.count[0])][0], maches=self.storage.count[0]))
 
 
 
@@ -134,7 +144,7 @@ if __name__ == "__main__":
 
     tpath = "./testmov/thumbnail_32si5cfrCNc.jpg"
     vpath = "./testmov/32si5cfrCNc.mp4"
-    storage = cvstorage(thumbnailpath=tpath, vidpath=vpath)
+    storage = storage(thumbnailpath=tpath, vidpath=vpath)
     storage.opencv.imgparse()
 
     print(time.time()-a)
