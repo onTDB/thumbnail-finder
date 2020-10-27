@@ -9,8 +9,10 @@ client_socket, addr = Server_socket.accept()
 while True:
     data = client_socket.recv(1024)
     if data != '\0':
-        break
-print(data)
+        print(data)
+    else:
+        pass
+        
 
 client_socket.close()
 Server_socket.close()

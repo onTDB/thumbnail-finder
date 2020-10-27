@@ -9,13 +9,12 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Net;
 using System.Net.Sockets;
-
+using System.IO;
 namespace WindowsFormsApp2
 {
     public partial class Form1 : MetroFramework.Forms.MetroForm
     {
-        public Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-        public IPEndPoint IPep = new IPEndPoint(IPAddress.Parse("127.0.0.1"), 9999);
+        public StringBuilder postParams = new StringBuilder();
 
         public Form1()
         {
@@ -24,30 +23,28 @@ namespace WindowsFormsApp2
             this.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             this.FormBorderStyle = FormBorderStyle.None;
             this.TopMost = true;
-            try
-            {
-                socket.Connect(IPep);
-            }catch(Exception ex)
-            {
-                MessageBox.Show(ex.ToString());
-
-            }
         }
         
         private void button1_Click(object sender, EventArgs e)
         {
-            
+            var p = new { Id = textBox1.Text};         
             try
             {
                 if (textBox1.Text != "") 
                 {
-                    Console.WriteLine(textBox1.Text + "\n" + textBox1.Text.Contains("://www.youtube.com/watch?v="));
+                    Console.WriteLine("Validation : " + textBox1.Text.Contains("://www.youtube.com/watch?v="));
                     try
                     {
-                        byte[] buff = Encoding.UTF8.GetBytes(textBox1.Text);
-                        Console.WriteLine(buff);
-                        socket.Send(buff, SocketFlags.None);
-                        socket.Close();
+                        postParams.Append("?id=" + textBox1.Text);
+                        byte[] result = Encoding.UTF8.GetBytes(postParams.ToString());
+                        HttpWebRequest wReq = (HttpWebRequest)WebRequest.Create("http://xnglwmx.purl.zz.am/akc");
+                        wReq.Method = "POST";
+                        wReq.ContentType = "application/x-www-form-urlencoded";
+                        wReq.ContentLength = result.Length;
+                        Stream postDataStream = wReq.GetRequestStream();
+                        postDataStream.Write(result, 0, result.Length);
+                        Console.WriteLine("실행완료");
+                        postDataStream.Close();
                     }
                     catch (Exception ex)
                     {
@@ -62,15 +59,8 @@ namespace WindowsFormsApp2
 
         private void Reconnect_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("연결을 재설정 합니다...\nPress Enter");
-            try
-            {
-                socket.Connect(IPep);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.ToString());
-            }            
+            MessageBox.Show("연결을 재설정 합니다...\nPress Enter");         
+            //삭제된 코드
         }
     }
 }

@@ -21,3 +21,16 @@ D:\GitHub\thumbnail-finder\WindowsFormsApp2\WindowsFormsApp2\bin\Debug\MetroFram
 D:\GitHub\thumbnail-finder\WindowsFormsApp2\WindowsFormsApp2\bin\Debug\MetroFramework.dll
 D:\GitHub\thumbnail-finder\WindowsFormsApp2\WindowsFormsApp2\bin\Debug\MetroFramework.Fonts.dll
 D:\GitHub\thumbnail-finder\WindowsFormsApp2\WindowsFormsApp2\obj\Debug\WindowsFormsApp2.csproj.CopyComplete
+D:\GitHub\thumbnail-finder\MainUI\WindowsFormsApp2\bin\Debug\WindowsFormsApp2.exe.config
+D:\GitHub\thumbnail-finder\MainUI\WindowsFormsApp2\bin\Debug\WindowsFormsApp2.exe
+D:\GitHub\thumbnail-finder\MainUI\WindowsFormsApp2\bin\Debug\WindowsFormsApp2.pdb
+D:\GitHub\thumbnail-finder\MainUI\WindowsFormsApp2\bin\Debug\MetroFramework.Design.dll
+D:\GitHub\thumbnail-finder\MainUI\WindowsFormsApp2\bin\Debug\MetroFramework.dll
+D:\GitHub\thumbnail-finder\MainUI\WindowsFormsApp2\bin\Debug\MetroFramework.Fonts.dll
+D:\GitHub\thumbnail-finder\MainUI\WindowsFormsApp2\obj\Debug\WindowsFormsApp2.csprojAssemblyReference.cache
+D:\GitHub\thumbnail-finder\MainUI\WindowsFormsApp2\obj\Debug\WindowsFormsApp2.Form1.resources
+D:\GitHub\thumbnail-finder\MainUI\WindowsFormsApp2\obj\Debug\WindowsFormsApp2.Properties.Resources.resources
+D:\GitHub\thumbnail-finder\MainUI\WindowsFormsApp2\obj\Debug\WindowsFormsApp2.csproj.GenerateResource.cache
+D:\GitHub\thumbnail-finder\MainUI\WindowsFormsApp2\obj\Debug\WindowsFormsApp2.csproj.CopyComplete
+D:\GitHub\thumbnail-finder\MainUI\WindowsFormsApp2\obj\Debug\WindowsFormsApp2.exe
+D:\GitHub\thumbnail-finder\MainUI\WindowsFormsApp2\obj\Debug\WindowsFormsApp2.pdb
