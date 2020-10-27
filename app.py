@@ -1,5 +1,21 @@
+class Storage(Exception):
+    def __init__(self):
+        from youtubedl import ytdl
+        import cv2
+        self.cv2 = cv2
+        self.ytdl = ytdl(self)
+        self.debug = False
+        pass
+    
+    def opencvclassmaker(self, thumbnailpath, vidpath):
+        import opencv
+        self.opencv = Storage(self, thumbnailpath, vidpath)
+
 class server(Exception):
     def __init__(self):
+        pass
+
+    def checkurl(self):
         pass
 
 from flask import Flask, request, render_template
@@ -20,6 +36,7 @@ def requestedpost():
     if "url" in request.json: param = request.json["url"]
     elif "id" in request.json: param = request.json["id"]
     else: return {"status": 400}
+
 
 if __name__ == '__main__':
     app.debug = True

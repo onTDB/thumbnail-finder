@@ -1,15 +1,16 @@
 # coding: utf-8
 
 class ytdl(Exception):
-    def __init__(self, url):
-        self.url = url
+    def __init__(self, storage):
+        self.url = None
         self.parsedurl = None
         self.vid
+        self.storage = storage
     
     def download(self):
         from os import system
         try:
-            system("youtube-dl --no-warnings -F -f 160 -o %(id)s.%(ext)s {url}")
+            system("youtube-dl --no-warnings -f 160 -o %(id)s.%(ext)s {url}")
         except:
             raise ChildProcessError
     

@@ -1,5 +1,6 @@
 class storage():
-    def __init__(self, thumbnailpath, vidpath):
+    def __init__(self, sto, thumbnailpath, vidpath):
+        self.mainstorage = sto
         self.thumbnailpath = thumbnailpath
         self.vidpath = vidpath
         self.thumbnail = None
@@ -86,7 +87,6 @@ class opencv():
             #    from matplotlib import pyplot as plt
             #    plt.imshow(img,),plt.show()
             #    exit()
-
 
             if self.storage.debug == True:
                 print("forfps: "+str(forfps))
