@@ -45,13 +45,14 @@ namespace WindowsFormsApp2
                         Stream postDataStream = wReq.GetRequestStream();
                         postDataStream.Write(result, 0, result.Length);
                         Console.WriteLine("실행완료");
-                        postDataStream.Close();
 
                         HttpWebResponse wResp = (HttpWebResponse)wReq.GetResponse();
                         Stream respPostStream = wResp.GetResponseStream();
                         StreamReader readerPost = new StreamReader(respPostStream, Encoding.Default);
 
                         string requestResult = readerPost.ReadToEnd();
+                        Console.WriteLine(requestResult);
+                        postDataStream.Close();
                     }
                     catch (Exception ex)
                     {
