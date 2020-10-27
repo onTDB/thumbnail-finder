@@ -11,9 +11,9 @@ class Storage(Exception):
         pass
     
     def save(self, movid, arg):
-        from json import load, dumps
+        from json import loads, dumps
         f = open("data.json", "r")
-        q = load(f.read())
+        q = loads(f.read())
         q.update({movid: {"frame": arg["frame"], "timestamp": arg["timestamp"], "maches": arg["maches"]}})
         f.close()
         f = open("data.json", "w")
@@ -21,12 +21,13 @@ class Storage(Exception):
         f.close()
     
     def search(self, movid):
-        from json import load
+        from json import loads
         f = open("data.json", "r")
-        q = load(f.read())
+        q = loads(f.read())
         f.close()
         if movid in q: return {"status": 200, "data": q[movid]}
-        else: return {"status": 404}
+        else: return {"status": 404, "line": "movie information is not found."}
+
 
 class server(Exception):
     def __init__(self, storage):
@@ -35,13 +36,14 @@ class server(Exception):
 
     def opencvclassmaker(self, movid):
         from opencv import cvstorage, opencv
+        from threading import Thread
         return cvstorage(self.storage, thumbnailpath="./{movid}.jpg".format(movid=movid), vidpath="./{movid}.mp4".format(movid=movid))
 
     def processstarter(self, param):
         try:
             movid = self.storage.ytdl.checkurl(param)
         except SyntaxError:
-            return {"status": 400}
+            return {"status": 400, "line": "Syntax Error. This is not a youtube url"}
         
         # Check
         rtn = self.storage.search(movid)
@@ -50,7 +52,7 @@ class server(Exception):
         try:
             self.storage.ytdl.download(movid)
         except:
-            return {"status": 503}
+            return {"status": 503, "line": "Cannot download Video"}
         
         # Start
 
@@ -62,7 +64,7 @@ class server(Exception):
         try:
             movid = self.storage.ytdl.checkurl(param)
         except SyntaxError:
-            return {"status": 400}
+            return {"status": 400, "line": "Syntax Error. This is not a youtube url"}
 
         return self.storage.search(movid)
 
@@ -86,7 +88,7 @@ def main():
 def requestedpost():
     if "url" in request.json: param = request.json["url"]
     elif "id" in request.json: param = request.json["id"]
-    else: return {"status": 400}
+    else: return {"status": 400, "line": "Cannot find parameter."}
     storage.server.processstarter(param)
     
 
@@ -94,21 +96,21 @@ def requestedpost():
 def requestedstatuspost():
     if "url" in request.json: param = request.json["url"]
     elif "id" in request.json: param = request.json["id"]
-    else: return {"status": 400}
+    else: return {"status": 400, "line": "Cannot find parameter."}
     storage.server.movtimestampsearch(param)
 
 @app.route('/act', methods=["GET"])
 def requestedget():
     if "url" in request.args: param = request.args["url"]
     elif "id" in request.args: param = request.args["id"]
-    else: return {"status": 400}
+    else: return {"status": 400, "line": "Cannot find parameter."}
     storage.server.processstarter(param)
 
 @app.route('/rtn', methods=["GET"])
 def requestedstatusget():
     if "url" in request.args: param = request.args["url"]
     elif "id" in request.args: param = request.args["id"]
-    else: return {"status": 400}
+    else: return {"status": 400, "line": "Cannot find parameter."}
     storage.server.movtimestampsearch(param)
 
 
