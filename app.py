@@ -1,3 +1,7 @@
+class server(Exception):
+    def __init__(self):
+        pass
+
 from flask import Flask, request, render_template
 from flask_compress import Compress
 import os
@@ -10,6 +14,12 @@ app.secret_key = os.urandom(12)
 @app.route('/')
 def main():
     return render_template("main.html")
+
+@app.route('/act', method=["POST"])
+def requestedpost():
+    if "url" in request.json: param = request.json["url"]
+    elif "id" in request.json: param = request.json["id"]
+    else: return {"status": 400}
 
 if __name__ == '__main__':
     app.debug = True
