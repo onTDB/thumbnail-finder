@@ -135,6 +135,7 @@ class opencv():
         print(self.storage.vidsf)
         print("\n\n")
         print("{frame} is the best. maches: {maches}".format(frame=self.storage.vidsf[str(self.storage.count[0])][0], maches=self.storage.count[0]))
+        return {"frame": self.storage.vidsf[str(self.storage.count[0])][0], "maches": self.storage.count[0], "timestamp": ""}
 
 
 
