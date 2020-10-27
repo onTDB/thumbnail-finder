@@ -38,6 +38,7 @@ def requestedpost():
     if "url" in request.json: param = request.json["url"]
     elif "id" in request.json: param = request.json["id"]
     else: return {"status": 400}
+    print(request.args)
 
 
 if __name__ == '__main__':
