@@ -1,6 +1,21 @@
+class cvstorage():
+    def __init__(self, sto, thumbnailpath, vidpath):
+        self.mainstorage = sto
+        self.thumbnailpath = thumbnailpath
+        self.vidpath = vidpath
+        self.thumbnail = None
+        self.opencv = opencv(self)
+        self.debug = False
+
+class tempstr():
+    def __init__(self):
+        import cv2
+        self.cv2 = cv2
+        self.sift = cv2.xfeatures2d.SIFT_create()
+
 class storage():
     def __init__(self, thumbnailpath, vidpath):
-        self.thumbnailpath = thumbnailpath
+        self.thumbnailpath = tempstr()
         self.vidpath = vidpath
         self.thumbnail = None
         self.opencv = opencv(self)
@@ -8,17 +23,17 @@ class storage():
 
 class opencv():
     def __init__(self, storage):
-        import cv2
-        self.cv2 = cv2
+        self.cv2 = self.storage.mainstorage.cv2
         self.storage = storage
 
-        self.sift = self.cv2.xfeatures2d.SIFT_create()
+        self.sift = self.storage.mainstorage.sift
         self.kp1, self.des1 = self.sift.detectAndCompute(self.cv2.imread(storage.thumbnailpath,0),None)
 
         #SETUP
         pass
 
     def core(self, storage, vidimg, frame):
+        #img = self.cv2.imread(vidimg,0)
         sift = self.sift
 
         kp1 = self.kp1
@@ -78,13 +93,13 @@ class opencv():
         
 
         while True:
+            #print("Nowfps: "+str(vc.get(1)))
             ret, img = vc.read()
             
             #if int(vc.get(1)) == 4232: 
             #    from matplotlib import pyplot as plt
             #    plt.imshow(img,),plt.show()
             #    exit()
-
 
             if self.storage.debug == True:
                 print("forfps: "+str(forfps))
@@ -119,7 +134,7 @@ if __name__ == "__main__":
 
     tpath = "./testmov/thumbnail_32si5cfrCNc.jpg"
     vpath = "./testmov/32si5cfrCNc.mp4"
-    storage = storage(thumbnailpath=tpath, vidpath=vpath)
+    storage = cvstorage(thumbnailpath=tpath, vidpath=vpath)
     storage.opencv.imgparse()
 
     print(time.time()-a)
