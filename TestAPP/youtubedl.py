@@ -1,4 +1,5 @@
 # coding: utf-8
+#134
 
 class ytdl(Exception):
     def __init__(self, storage):
@@ -9,31 +10,43 @@ class ytdl(Exception):
         try:
             turl = youtube_dl.YoutubeDL({}).extract_info("https://youtu.be/"+yturl, download=False)
         except youtube_dl.utils.DownloadError:
+            from time import sleep
+            sleep(1)
             turl = youtube_dl.YoutubeDL({}).extract_info("https://youtu.be/"+yturl, download=False)
         except youtube_dl.utils.RegexNotFoundError:
+            from time import sleep
+            sleep(1)
             turl = youtube_dl.YoutubeDL({}).extract_info("https://youtu.be/"+yturl, download=False)
         except:
             raise SyntaxError
-        self.movie(yturl, turl)
+        fps = self.movie(yturl, turl)
         self.thumbnail(yturl, turl)
+        return fps
     
     def movie(self, yturl, turl):
-        from requests import get
-        data = None
+        #from requests import get
+        #data = None
         for i in turl["formats"]:
-            if i["format_id"] == 134:
+            if i["format_id"] == '134':
                 data = i
                 break
+        
+        #if data == None: raise SyntaxError
+        #f = open(yturl+".mp4", "wb")
+        #f.write(get(data["url"]).content)
+        #f.close()
+        from os import system
+        try:
+            system("youtube-dl --no-warnings -f 134 -o %(id)s.%(ext)s {url}".format(url="https://youtu.be/"+yturl))
+        except:
+            raise ChildProcessError
+        
+        from os.path import isfile
+        if isfile(yturl+".mp4"): pass
+        else: system("youtube-dl --no-warnings -f 134 -o %(id)s.%(ext)s {url}".format(url="https://youtu.be/"+yturl))
 
-        if data == None:  raise SyntaxError
+        return data["fps"]
 
-        f = open(yturl+".mp4", "wb")
-        f.write(get(data["url"]).content)
-        f.close()
-        #try:
-        #    system("youtube-dl --no-warnings -f 134 -o %(id)s.%(ext)s {url}".format(url="https://youtu.be/"+yturl))
-        #except:
-        #    raise ChildProcessError
     
     def thumbnail(self, yturl, turl):
         from requests import get

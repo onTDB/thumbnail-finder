@@ -1,5 +1,6 @@
 class cvstorage():
-    def __init__(self, sto, thumbnailpath, vidpath):
+    def __init__(self, sto, thumbnailpath, vidpath, fps):
+        self.fps = fps
         self.count = []
         self.mainstorage = sto
         self.thumbnailpath = thumbnailpath
@@ -109,11 +110,11 @@ class opencv():
             #    exit()
 
             if self.storage.debug == True:
-                print("forfps: "+str(forfps))
+                print("forfps: "+str(self.storage.fps))
                 print("isOpened: "+str(vc.isOpened()))
                 print("Nowfps: "+str(vc.get(1)))
                 print("\n\n")
-            if (int(vc.get(1)) % forfps == 0): 
+            if (int(vc.get(1)) % self.storage.fps == 0): 
                 #print("Nowfps: "+str(vc.get(1)))
                 tmp = Thread(target=self.core, args=(self.storage, img, vc.get(1),))
                 tmp.start()
@@ -131,11 +132,12 @@ class opencv():
         
         self.storage.count.sort(reverse=True)
         print(self.storage.vids)
-        print("\n\n")
+        print("\n")
         print(self.storage.vidsf)
-        print("\n\n")
+        print("\n")
         print("{frame} is the best. maches: {maches}".format(frame=self.storage.vidsf[str(self.storage.count[0])][0], maches=self.storage.count[0]))
-        return {"frame": self.storage.vidsf[str(self.storage.count[0])][0], "maches": self.storage.count[0], "timestamp": ""}
+        print(str(str(int(self.storage.vidsf[str(self.storage.count[0])][0]/24/60))+":"+str(int(int(self.storage.vidsf[str(self.storage.count[0])][0]/24)-int(self.storage.vidsf[str(self.storage.count[0])][0]/24/60)*60))))
+        return {"frame": self.storage.vidsf[str(self.storage.count[0])][0], "maches": self.storage.count[0], "timestamp": int(self.storage.vidsf[str(self.storage.count[0])][0]/24), "timestampMinSec": str(str(int(self.storage.vidsf[str(self.storage.count[0])][0]/24/60))+":"+str(int(int(self.storage.vidsf[str(self.storage.count[0])][0]/24)-int(self.storage.vidsf[str(self.storage.count[0])][0]/24/60)*60)))}
 
 
 
