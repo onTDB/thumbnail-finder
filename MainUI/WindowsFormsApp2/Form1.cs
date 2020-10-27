@@ -38,6 +38,7 @@ namespace WindowsFormsApp2
                         postParams.Append("?id=" + textBox1.Text);
                         byte[] result = Encoding.UTF8.GetBytes(postParams.ToString());
                         HttpWebRequest wReq = (HttpWebRequest)WebRequest.Create("http://xnglwmx.purl.zz.am/akc");
+
                         wReq.Method = "POST";
                         wReq.ContentType = "application/x-www-form-urlencoded";
                         wReq.ContentLength = result.Length;
@@ -45,6 +46,12 @@ namespace WindowsFormsApp2
                         postDataStream.Write(result, 0, result.Length);
                         Console.WriteLine("실행완료");
                         postDataStream.Close();
+
+                        HttpWebResponse wResp = (HttpWebResponse)wReq.GetResponse();
+                        Stream respPostStream = wResp.GetResponseStream();
+                        StreamReader readerPost = new StreamReader(respPostStream, Encoding.Default);
+
+                        string requestResult = readerPost.ReadToEnd();
                     }
                     catch (Exception ex)
                     {
