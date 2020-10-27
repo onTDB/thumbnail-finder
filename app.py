@@ -2,14 +2,16 @@ class Storage(Exception):
     def __init__(self):
         from youtubedl import ytdl
         import cv2
-        self.cv2 = cv2
-        self.ytdl = ytdl(self)
         self.debug = False
+        self.cv2 = cv2
+        self.sift = cv2.xfeatures2d.SIFT_create()
+        self.ytdl = ytdl(self)
+        self.now = []
         pass
     
     def opencvclassmaker(self, thumbnailpath, vidpath):
-        import opencv
-        self.opencv = Storage(self, thumbnailpath, vidpath)
+        from opencv import cvstorage, opencv
+        opencv = cvstorage(self, thumbnailpath, vidpath)
 
 class server(Exception):
     def __init__(self):
