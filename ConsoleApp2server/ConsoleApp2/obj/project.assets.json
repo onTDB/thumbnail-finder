@@ -14,11 +14,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\C_Project\\C#\\example\\예제7 socket\\message\\ConsoleApp2server\\ConsoleApp2\\ConsoleApp2.csproj",
+      "projectUniqueName": "D:\\GitHub\\thumbnail-finder\\ConsoleApp2server\\ConsoleApp2\\ConsoleApp2.csproj",
       "projectName": "ConsoleApp2",
-      "projectPath": "D:\\C_Project\\C#\\example\\예제7 socket\\message\\ConsoleApp2server\\ConsoleApp2\\ConsoleApp2.csproj",
+      "projectPath": "D:\\GitHub\\thumbnail-finder\\ConsoleApp2server\\ConsoleApp2\\ConsoleApp2.csproj",
       "packagesPath": "C:\\Users\\ketch\\.nuget\\packages\\",
-      "outputPath": "D:\\C_Project\\C#\\example\\예제7 socket\\message\\ConsoleApp2server\\ConsoleApp2\\obj\\",
+      "outputPath": "D:\\GitHub\\thumbnail-finder\\ConsoleApp2server\\ConsoleApp2\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
