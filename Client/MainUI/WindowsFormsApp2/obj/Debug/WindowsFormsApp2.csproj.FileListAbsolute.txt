@@ -46,3 +46,17 @@ D:\GitHub\thumbnail-finder\Client\MainUI\WindowsFormsApp2\obj\Debug\WindowsForms
 D:\GitHub\thumbnail-finder\Client\MainUI\WindowsFormsApp2\obj\Debug\WindowsFormsApp2.pdb
 D:\GitHub\thumbnail-finder\Client\MainUI\WindowsFormsApp2\bin\Debug\Newtonsoft.Json.dll
 D:\GitHub\thumbnail-finder\Client\MainUI\WindowsFormsApp2\bin\Debug\Newtonsoft.Json.xml
+C:\Users\doyun\Documents\GitHub\thumbnail-finder\Client\MainUI\WindowsFormsApp2\bin\Debug\WindowsFormsApp2.exe.config
+C:\Users\doyun\Documents\GitHub\thumbnail-finder\Client\MainUI\WindowsFormsApp2\bin\Debug\WindowsFormsApp2.exe
+C:\Users\doyun\Documents\GitHub\thumbnail-finder\Client\MainUI\WindowsFormsApp2\bin\Debug\WindowsFormsApp2.pdb
+C:\Users\doyun\Documents\GitHub\thumbnail-finder\Client\MainUI\WindowsFormsApp2\bin\Debug\log4net.dll
+C:\Users\doyun\Documents\GitHub\thumbnail-finder\Client\MainUI\WindowsFormsApp2\bin\Debug\log4net.xml
+C:\Users\doyun\Documents\GitHub\thumbnail-finder\Client\MainUI\WindowsFormsApp2\bin\Debug\Newtonsoft.Json.xml
+C:\Users\doyun\Documents\GitHub\thumbnail-finder\Client\MainUI\WindowsFormsApp2\obj\Debug\WindowsFormsApp2.csprojAssemblyReference.cache
+C:\Users\doyun\Documents\GitHub\thumbnail-finder\Client\MainUI\WindowsFormsApp2\obj\Debug\WindowsFormsApp2.Form1.resources
+C:\Users\doyun\Documents\GitHub\thumbnail-finder\Client\MainUI\WindowsFormsApp2\obj\Debug\WindowsFormsApp2.Properties.Resources.resources
+C:\Users\doyun\Documents\GitHub\thumbnail-finder\Client\MainUI\WindowsFormsApp2\obj\Debug\WindowsFormsApp2.csproj.GenerateResource.cache
+C:\Users\doyun\Documents\GitHub\thumbnail-finder\Client\MainUI\WindowsFormsApp2\obj\Debug\WindowsFormsApp2.csproj.CoreCompileInputs.cache
+C:\Users\doyun\Documents\GitHub\thumbnail-finder\Client\MainUI\WindowsFormsApp2\obj\Debug\WindowsFormsApp2.csproj.CopyComplete
+C:\Users\doyun\Documents\GitHub\thumbnail-finder\Client\MainUI\WindowsFormsApp2\obj\Debug\WindowsFormsApp2.exe
+C:\Users\doyun\Documents\GitHub\thumbnail-finder\Client\MainUI\WindowsFormsApp2\obj\Debug\WindowsFormsApp2.pdb
