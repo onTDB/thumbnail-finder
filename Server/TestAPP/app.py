@@ -105,29 +105,29 @@ app.secret_key = os.urandom(12)
 def main():
     return "It Works!"
 
-@app.route('/act', methods=["POST"])
-def requestedpost():
-    if "url" in request.json: param = request.json["url"]
-    elif "id" in request.json: param = request.json["id"]
-    else: return {"status": 400, "line": "Cannot find parameter."}
-    return storage.server.processstarter(param)
-    
+#@app.route('/act', methods=["POST"])
+#def requestedpost():
+#    if "url" in request.json: param = request.json["url"]
+#    elif "id" in request.json: param = request.json["id"]
+#    else: return {"status": 400, "line": "Cannot find parameter."}
+#    return storage.server.processstarter(param)
+#    
+#
+#@app.route('/rtn', methods=["POST"])
+#def requestedstatuspost():
+#    if "url" in request.json: param = request.json["url"]
+#    elif "id" in request.json: param = request.json["id"]
+#    else: return {"status": 400, "line": "Cannot find parameter."}
+#    return storage.server.movtimestampsearch(param)
 
-@app.route('/rtn', methods=["POST"])
-def requestedstatuspost():
-    if "url" in request.json: param = request.json["url"]
-    elif "id" in request.json: param = request.json["id"]
-    else: return {"status": 400, "line": "Cannot find parameter."}
-    return storage.server.movtimestampsearch(param)
-
-@app.route('/act', methods=["GET"])
+@app.route('/act', methods=["GET", "POST"])
 def requestedget():
     if "url" in request.args: param = request.args["url"]
     elif "id" in request.args: param = request.args["id"]
     else: return {"status": 400, "line": "Cannot find parameter."}
     return storage.server.processstarter(param)
 
-@app.route('/rtn', methods=["GET"])
+@app.route('/rtn', methods=["GET", "POST"])
 def requestedstatusget():
     if "url" in request.args: param = request.args["url"]
     elif "id" in request.args: param = request.args["id"]
@@ -151,4 +151,4 @@ if __name__ == '__main__':
     #ssl_context = ssl.SSLContext(ssl.PROTOCOL_TLS)
     #ssl_context.load_cert_chain(certfile='certfile.crt', keyfile='private.key', password='password')
     #app.run(host="0.0.0.0", threaded=True, port=443, ssl_context=ssl_context)
-    app.run(host="0.0.0.0", threaded=True, port=80)
+    app.run(host="0.0.0.0", threaded=True, port=8080)
