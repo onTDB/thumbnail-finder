@@ -11,11 +11,16 @@ using System.Net;
 using System.Net.Http;
 using System.IO;
 using Newtonsoft.Json.Linq;
+using System.Diagnostics;
+using Microsoft.Win32;
 
 namespace WindowsFormsApp2
 {
     public partial class Form1 : MetroFramework.Forms.MetroForm
     {
+        public string returnURL = null;
+        public string container=null;
+        public static Process process = new Process();
         public JObject rtn1 = JObject.Parse(@"{}");
         public StringBuilder postParams = new StringBuilder();
 
@@ -26,6 +31,7 @@ namespace WindowsFormsApp2
             this.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             this.FormBorderStyle = FormBorderStyle.None;
             this.TopMost = true;
+            this.Reconnect.Visible = false;
         }
         
         private void button1_Click(object sender, EventArgs e)
@@ -38,7 +44,7 @@ namespace WindowsFormsApp2
                     Console.WriteLine("Validation : " + textBox1.Text.Contains("://www.youtube.com/watch?v="));
                     try
                     {
-                        string container = textBox1.Text;
+                        container = textBox1.Text;
                         input.Visible = false;
                         postParams.Append("?url=" + container);
                         byte[] result = Encoding.UTF8.GetBytes(postParams.ToString());
@@ -48,7 +54,6 @@ namespace WindowsFormsApp2
                         wReq.ContentLength = result.Length;
                         Stream postDataStream = wReq.GetRequestStream();
                         postDataStream.Write(result, 0, result.Length);
-                        Console.WriteLine("실행완료");
 
                         HttpWebResponse wResp = (HttpWebResponse)wReq.GetResponse();
                         Stream respPostStream = wResp.GetResponseStream();
@@ -69,7 +74,6 @@ namespace WindowsFormsApp2
                                 wReq1.Method = "POST";
                                 wReq1.ContentType = "application/x-www-form-urlencoded";
                                 Stream postDataStream1 = wReq1.GetRequestStream();
-                                Console.WriteLine("실행완료");
 
                                 HttpWebResponse wResp1 = (HttpWebResponse)wReq1.GetResponse();
                                 Stream respPostStream1 = wResp1.GetResponseStream();
@@ -104,10 +108,12 @@ namespace WindowsFormsApp2
                         MessageBox.Show(ex.ToString());
                     }finally
                     {
-                        textBox1.Text = rtn1["data"]["timestamp"].ToString();
-                        
+                        Reconnect.Visible = true;
+                        returnURL = "https://youtu.be/" + container.Substring(container.IndexOf("=") + 1) + "?t=" + rtn1["data"]["timestamp"].ToString();
+                        process = Process.Start(returnURL);
+                        textBox1.Text = null;                        
                     }
-                } else Console.WriteLine("null");
+                } else Console.WriteLine("textbox1 == null");
             }catch(Exception ex)
             {
                 Console.WriteLine(ex);
@@ -116,8 +122,8 @@ namespace WindowsFormsApp2
 
         private void Reconnect_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("연결을 재설정 합니다...\nPress Enter");         
-            //삭제된 코드
+            process = Process.Start(returnURL);
+            MessageBox.Show("연결을 재설정 합니다...\nPress Enter");
         }
     }
 }

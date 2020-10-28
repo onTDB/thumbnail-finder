@@ -60,3 +60,4 @@ C:\Users\doyun\Documents\GitHub\thumbnail-finder\Client\MainUI\WindowsFormsApp2\
 C:\Users\doyun\Documents\GitHub\thumbnail-finder\Client\MainUI\WindowsFormsApp2\obj\Debug\WindowsFormsApp2.csproj.CopyComplete
 C:\Users\doyun\Documents\GitHub\thumbnail-finder\Client\MainUI\WindowsFormsApp2\obj\Debug\WindowsFormsApp2.exe
 C:\Users\doyun\Documents\GitHub\thumbnail-finder\Client\MainUI\WindowsFormsApp2\obj\Debug\WindowsFormsApp2.pdb
+D:\GitHub\thumbnail-finder\Client\MainUI\WindowsFormsApp2\bin\Debug\log4net.xml
