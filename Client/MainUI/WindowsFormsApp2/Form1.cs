@@ -8,8 +8,10 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Net;
-using System.Net.Sockets;
+using System.Net.Http;
 using System.IO;
+using Newtonsoft.Json.Linq;
+
 namespace WindowsFormsApp2
 {
     public partial class Form1 : MetroFramework.Forms.MetroForm
@@ -35,9 +37,10 @@ namespace WindowsFormsApp2
                     Console.WriteLine("Validation : " + textBox1.Text.Contains("://www.youtube.com/watch?v="));
                     try
                     {
-                        postParams.Append("?id=" + textBox1.Text);
+                        input.Visible = false;
+                        postParams.Append("?url=" + textBox1.Text);
                         byte[] result = Encoding.UTF8.GetBytes(postParams.ToString());
-                        HttpWebRequest wReq = (HttpWebRequest)WebRequest.Create("http://xnglwmx.purl.zz.am/akc");
+                        HttpWebRequest wReq = (HttpWebRequest)WebRequest.Create("http://xnglwmx.purl.zz.am:8080/act?url="+textBox1.Text);
 
                         wReq.Method = "POST";
                         wReq.ContentType = "application/x-www-form-urlencoded";
@@ -50,9 +53,32 @@ namespace WindowsFormsApp2
                         Stream respPostStream = wResp.GetResponseStream();
                         StreamReader readerPost = new StreamReader(respPostStream, Encoding.Default);
 
-                        string requestResult = readerPost.ReadToEnd();
-                        Console.WriteLine(requestResult);
+                        var requestResult = readerPost.ReadToEnd();
+                        JObject rtn = JObject.Parse(requestResult);
+
+                    
+                        textBox1.Text = rtn["status"].ToString();
+                        if (rtn["status"].ToString() == "200")
+                        {
+                            while(true)
+                            {
+                                postParams.Append("?url=" + textBox1.Text);
+                                byte[] result = Encoding.UTF8.GetBytes(postParams.ToString());
+                                HttpWebRequest wReq = (HttpWebRequest)WebRequest.Create("http://xnglwmx.purl.zz.am:8080/act?url=" + textBox1.Text);
+
+                                wReq.Method = "POST";
+                                wReq.ContentType = "application/x-www-form-urlencoded";
+                                wReq.ContentLength = result.Length;
+                                Stream postDataStream = wReq.GetRequestStream();
+                                postDataStream.Write(result, 0, result.Length);
+                                Console.WriteLine("실행완료");
+                            }
+                        } else
+                        {
+                            MessageBox.Show("서버에 문제 발생" + rtn["line"]);
+                        }
                         postDataStream.Close();
+                        input.Visible = true;
                     }
                     catch (Exception ex)
                     {

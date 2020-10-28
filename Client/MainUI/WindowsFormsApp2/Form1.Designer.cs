@@ -51,7 +51,7 @@
             this.input.Name = "input";
             this.input.Size = new System.Drawing.Size(122, 69);
             this.input.TabIndex = 1;
-            this.input.Text = "input";
+            this.input.Text = "Go";
             this.input.UseVisualStyleBackColor = false;
             this.input.Click += new System.EventHandler(this.button1_Click);
             // 
