@@ -3,6 +3,13 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+Server/__pycache__/
+Server/TestAPP/__pycache__/
+
+Client/MainUI/ConsoleApp1/bin/*
+Client/ConsoleApp2server/ConsoleApp2/bin/*
+Client/Socket/ConsoleApp1server/bin/*
+
 # C extensions
 *.so
 
