@@ -1,0 +1,11 @@
+D:\C_Project\C#\example\예제7 socket\capture\ConsoleApp1server\ConsoleApp1server\bin\Debug\netcoreapp3.1\ConsoleApp1server.exe
+D:\C_Project\C#\example\예제7 socket\capture\ConsoleApp1server\ConsoleApp1server\bin\Debug\netcoreapp3.1\ConsoleApp1server.deps.json
+D:\C_Project\C#\example\예제7 socket\capture\ConsoleApp1server\ConsoleApp1server\bin\Debug\netcoreapp3.1\ConsoleApp1server.runtimeconfig.json
+D:\C_Project\C#\example\예제7 socket\capture\ConsoleApp1server\ConsoleApp1server\bin\Debug\netcoreapp3.1\ConsoleApp1server.runtimeconfig.dev.json
+D:\C_Project\C#\example\예제7 socket\capture\ConsoleApp1server\ConsoleApp1server\bin\Debug\netcoreapp3.1\ConsoleApp1server.dll
+D:\C_Project\C#\example\예제7 socket\capture\ConsoleApp1server\ConsoleApp1server\bin\Debug\netcoreapp3.1\ConsoleApp1server.pdb
+D:\C_Project\C#\example\예제7 socket\capture\ConsoleApp1server\ConsoleApp1server\obj\Debug\netcoreapp3.1\ConsoleApp1server.csprojAssemblyReference.cache
+D:\C_Project\C#\example\예제7 socket\capture\ConsoleApp1server\ConsoleApp1server\obj\Debug\netcoreapp3.1\ConsoleApp1server.AssemblyInfoInputs.cache
+D:\C_Project\C#\example\예제7 socket\capture\ConsoleApp1server\ConsoleApp1server\obj\Debug\netcoreapp3.1\ConsoleApp1server.AssemblyInfo.cs
+D:\C_Project\C#\example\예제7 socket\capture\ConsoleApp1server\ConsoleApp1server\obj\Debug\netcoreapp3.1\ConsoleApp1server.dll
+D:\C_Project\C#\example\예제7 socket\capture\ConsoleApp1server\ConsoleApp1server\obj\Debug\netcoreapp3.1\ConsoleApp1server.pdb
