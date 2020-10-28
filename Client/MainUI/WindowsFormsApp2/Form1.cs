@@ -16,6 +16,7 @@ namespace WindowsFormsApp2
 {
     public partial class Form1 : MetroFramework.Forms.MetroForm
     {
+        public JObject rtn1 = JObject.Parse(@"{}");
         public StringBuilder postParams = new StringBuilder();
 
         public Form1()
@@ -37,11 +38,11 @@ namespace WindowsFormsApp2
                     Console.WriteLine("Validation : " + textBox1.Text.Contains("://www.youtube.com/watch?v="));
                     try
                     {
+                        string container = textBox1.Text;
                         input.Visible = false;
-                        postParams.Append("?url=" + textBox1.Text);
+                        postParams.Append("?url=" + container);
                         byte[] result = Encoding.UTF8.GetBytes(postParams.ToString());
-                        HttpWebRequest wReq = (HttpWebRequest)WebRequest.Create("http://xnglwmx.purl.zz.am:8080/act?url="+textBox1.Text);
-
+                        HttpWebRequest wReq = (HttpWebRequest)WebRequest.Create("http://xnglwmx.purl.zz.am:8080/act?url="+ container);
                         wReq.Method = "POST";
                         wReq.ContentType = "application/x-www-form-urlencoded";
                         wReq.ContentLength = result.Length;
@@ -57,21 +58,39 @@ namespace WindowsFormsApp2
                         JObject rtn = JObject.Parse(requestResult);
 
                     
-                        textBox1.Text = rtn["status"].ToString();
+                        MessageBox.Show(rtn["status"].ToString());
                         if (rtn["status"].ToString() == "200")
                         {
                             while(true)
                             {
-                                postParams.Append("?url=" + textBox1.Text);
-                                byte[] result = Encoding.UTF8.GetBytes(postParams.ToString());
-                                HttpWebRequest wReq = (HttpWebRequest)WebRequest.Create("http://xnglwmx.purl.zz.am:8080/act?url=" + textBox1.Text);
-
-                                wReq.Method = "POST";
-                                wReq.ContentType = "application/x-www-form-urlencoded";
-                                wReq.ContentLength = result.Length;
-                                Stream postDataStream = wReq.GetRequestStream();
-                                postDataStream.Write(result, 0, result.Length);
+                                HttpWebRequest wReq1 = (HttpWebRequest)WebRequest.Create("http://xnglwmx.purl.zz.am:8080/rtn?url=" + container);
+                                
+                                
+                                wReq1.Method = "POST";
+                                wReq1.ContentType = "application/x-www-form-urlencoded";
+                                Stream postDataStream1 = wReq1.GetRequestStream();
                                 Console.WriteLine("실행완료");
+
+                                HttpWebResponse wResp1 = (HttpWebResponse)wReq1.GetResponse();
+                                Stream respPostStream1 = wResp1.GetResponseStream();
+                                StreamReader readerPost1 = new StreamReader(respPostStream1, Encoding.Default);
+
+                                var requestResult1 = readerPost1.ReadToEnd();
+                                rtn1 = JObject.Parse(requestResult1);
+
+                                if (rtn1["status"].ToString() == "200")
+                                {
+                                    MessageBox.Show(rtn1["data"]["timestampMinSec"].ToString());
+                                    break;
+                                }else if(rtn1["status"].ToString() == "503" )
+                                {
+                                    System.Threading.Thread.Sleep(5000);
+                                    Console.WriteLine("503");
+                                }else
+                                {
+                                    MessageBox.Show("서버에 문제 발생" + rtn["line"]);
+                                    break;
+                                }
                             }
                         } else
                         {
@@ -83,6 +102,10 @@ namespace WindowsFormsApp2
                     catch (Exception ex)
                     {
                         MessageBox.Show(ex.ToString());
+                    }finally
+                    {
+                        textBox1.Text = rtn1["data"]["timestamp"].ToString();
+                        
                     }
                 } else Console.WriteLine("null");
             }catch(Exception ex)
