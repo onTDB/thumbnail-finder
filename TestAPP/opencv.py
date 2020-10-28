@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 class cvstorage():
     def __init__(self, sto, thumbnailpath, vidpath, fps):
         self.fps = fps

@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 class Storage(Exception):
     def __init__(self):
         from youtubedl import ytdl
