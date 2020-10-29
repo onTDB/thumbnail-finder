@@ -46,25 +46,25 @@ class server(Exception):
         self.storage = storage
         pass
 
-    def opencvclassmaker(self, movid, fps):
+    def opencvclassmaker(self, movid, fps, ip):
         from threading import Thread
-        t = Thread(target=self.opencvclassstarter, args=(self.storage, movid, fps))
+        t = Thread(target=self.opencvclassstarter, args=(self.storage, movid, fps, ip))
+        self.storage.debuglogger(ip=ip, desc="OPENCV Threading Start", code=200)
         t.start()
+        self.storage.debuglogger(ip=ip, desc="threading list append complete", code=200)
         self.storage.threads.update({movid: t})
     
-    def opencvclassstarter(self, storage, movid, fps):
+    def opencvclassstarter(self, storage, movid, fps, ip):
         from opencv import cvstorage
-        print ("OPENCV Is now working...")
-        rtn = cvstorage(storage, thumbnailpath="./{movid}.jpg".format(movid=movid), vidpath="./{movid}.mp4".format(movid=movid), fps=fps).opencv.imgparse()
+        self.storage.debuglogger(ip=ip, desc="opencv class import complete!", code=200)
+        rtn = cvstorage(storage, thumbnailpath="./{movid}.jpg".format(movid=movid), vidpath="./{movid}.mp4".format(movid=movid), fps=fps, ip=ip).opencv.imgparse()
         storage.save(movid, rtn)
         storage.threads[movid] = None
         storage.now.remove(movid)
 
     def processstarter(self, param, ip):
-        try: movid = self.storage.ytdl.checkurl(param)
-        except SyntaxError: 
-            self.storage.logger(ip=ip, desc="Syntax Error. This is not a youtube url", code=400)
-            return {"status": 400, "line": "Syntax Error. This is not a youtube url"}
+        try: movid = self.storage.ytdl.checkurl(param, ip)
+        except SyntaxError: return {"status": 400, "line": "Syntax Error. This is not a youtube url"}
         self.storage.debuglogger(ip=ip, desc="Youtube URL Checker Complete", code=200)
         
         # Check
@@ -77,9 +77,10 @@ class server(Exception):
             self.storage.logger(ip=ip, desc="Already Now analyzing...", code=200)
             return {"status": 200}
 
-        try:
-            self.storage.debuglogger(ip=ip, desc="Download Start", code=200)
-            fps = self.storage.ytdl.download(movid)
+        # Download Start
+
+        self.storage.debuglogger(ip=ip, desc="Download Start", code=200)
+        try: fps = self.storage.ytdl.download(movid)
 
         except: return {"status": 503, "line": "Cannot download Video. Retry again."}
         
@@ -94,9 +95,10 @@ class server(Exception):
         self.storage.debuglogger(ip=ip, desc="Download Complete!", code=200)
 
         # Start
-        
         self.storage.now.append(movid)
-        self.opencvclassmaker(movid, fps)
+        self.storage.debuglogger(ip=ip, desc="Now analyze append Complete!", code=200)
+        self.storage.debuglogger(ip=ip, desc="!!OPENCV THREAD START!!", code=200)
+        self.opencvclassmaker(movid, fps, ip)
         return {"status": 200}
 
     def movtimestampsearch(self, param, url):

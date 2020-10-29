@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 class cvstorage():
-    def __init__(self, sto, thumbnailpath, vidpath, fps):
+    def __init__(self, sto, thumbnailpath, vidpath, fps, ip):
+        self.ip = ip
         self.fps = fps
         self.count = []
         self.mainstorage = sto
