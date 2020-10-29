@@ -33,6 +33,19 @@ namespace WindowsFormsApp2
             //this.FormBorderStyle = FormBorderStyle.None;
             this.TopMost = true;
             this.Reconnect.Visible = false;
+            string dir = Directory.GetCurrentDirectory() + @"\url.txt";
+            string dir2 = Directory.GetCurrentDirectory() + @"\n.txt";
+            Console.WriteLine(dir2);
+
+            //string n=File.ReadAllText(dir2);
+            //JObject SaveUrl = new JObject(new JProperty(("url"+n).ToString(), "sonhung"));
+            
+            JObject SaveUrl = new JObject(new JProperty(("url").ToString(), "sonhung"));
+            
+            string content = File.ReadAllText(dir);
+            File.WriteAllText(dir, content+"\n"+SaveUrl.ToString()); 
+            Console.WriteLine(content);
+
         }
         public string GetRtn()
         {
@@ -75,14 +88,9 @@ namespace WindowsFormsApp2
         {
             var p = new { Id = textBox1.Text};         
             try
-            {
-                
-
+            {            
                 if (textBox1.Text != "") 
                 {
-                    
-                    //Console.WriteLine("Validation : " + textBox1.Text.Contains("://www.youtube.com/watch?v="));
-
                     if (textBox1.Text.Contains("youtu.be/"))
                     {
 
@@ -108,7 +116,7 @@ namespace WindowsFormsApp2
 
                                         if (rtn1["status"].ToString() == "200")
                                         {
-                                            MessageBox.Show(rtn1["data"]["timestampMinSec"].ToString());
+                                            MessageBox.Show("status : " + rtn1["data"]["timestampMinSec"].ToString() + "\n분석 완료");
                                             break;
                                         }
                                         else if (rtn1["status"].ToString() == "503")
@@ -123,7 +131,6 @@ namespace WindowsFormsApp2
                                             break;
                                         }
                                     }
-
                                 }
                                 catch (Exception ex)
                                 {
@@ -145,10 +152,11 @@ namespace WindowsFormsApp2
                         {
                             Reconnect.Visible = true;
                             returnURL = container + "?t=" + rtn1["data"]["timestamp"].ToString();
+                            JObject SaveUrl = new JObject(new JProperty("url", returnURL));
+                            File.WriteAllText(Directory.GetCurrentDirectory(),SaveUrl.ToString());
                             process = Process.Start(returnURL);
                             textBox1.Text = null;
                         }
-
                     }
                     else if (textBox1.Text.Contains("youtube.com"))
                     {
@@ -156,66 +164,21 @@ namespace WindowsFormsApp2
                         input.Visible = false;
                         Console.WriteLine("1단계 clickevent 발생 후 if 검사 완료.");
                         try
-                        {
-                        
-                            
+                        {                      
                             postParams.Append("?url=" + container);
-                            //byte[] result = Encoding.UTF8.GetBytes(postParams.ToString());
-                            //HttpWebRequest wReq = (HttpWebRequest)WebRequest.Create("http://xnglwmx.purl.zz.am:8080/act?url=" + container);
-                            //Console.WriteLine("2단계 wReq 검사 완료.");
-
-                            //wReq.Method = "POST";
-                            //wReq.ContentType = "application/x-www-form-urlencoded";
-                            //wReq.ContentLength = result.Length;
-                            //try
-                            //{
-                            //    Stream postDataStream = wReq.GetRequestStream();
-                            //    postDataStream.Write(result, 0, result.Length);
-                            //    Console.WriteLine("3단계 write 검사 완료."); //서버 오류인듯
-                            //}
-                            //catch (Exception ex)
-                            //{
-                            //    MessageBox.Show(ex.ToString());
-                            //}
-
-
-                            //HttpWebResponse wResp = (HttpWebResponse)wReq.GetResponse();
-                            //Stream respPostStream = wResp.GetResponseStream();
-                            //StreamReader readerPost = new StreamReader(respPostStream, Encoding.Default);
-
-                            //var requestResult = readerPost.ReadToEnd();
-                            //JObject rtn = JObject.Parse(requestResult);
-
                             JObject rtn = JObject.Parse(GetRtn());
-
-
-                            MessageBox.Show(rtn["status"].ToString());
+                            MessageBox.Show("status : " + rtn["status"].ToString());
                             if (rtn["status"].ToString() == "200")
                             {
                                 try
                                 {
                                     while (true)
-                                    {
-                                        //HttpWebRequest wReq1 = (HttpWebRequest)WebRequest.Create("http://xnglwmx.purl.zz.am:8080/rtn?url=" + container);
-
-
-                                        //wReq1.Method = "POST";
-                                        //wReq1.ContentType = "application/x-www-form-urlencoded";
-                                        //Stream postDataStream1 = wReq1.GetRequestStream();
-
-                                        //HttpWebResponse wResp1 = (HttpWebResponse)wReq1.GetResponse();
-                                        //Stream respPostStream1 = wResp1.GetResponseStream();
-                                        //StreamReader readerPost1 = new StreamReader(respPostStream1, Encoding.Default);
-
-                                        //var requestResult1 = readerPost1.ReadToEnd();
-
-                                        //rtn1 = JObject.Parse(requestResult1);
-
+                                    {                                       
                                         rtn1 = JObject.Parse(GetRtn1());
 
                                         if (rtn1["status"].ToString() == "200")
                                         {
-                                            MessageBox.Show(rtn1["data"]["timestampMinSec"].ToString());
+                                            MessageBox.Show("status : " + rtn1["data"]["timestampMinSec"].ToString() + "\n분석 진행중");
                                             break;
                                         }
                                         else if (rtn1["status"].ToString() == "503")
