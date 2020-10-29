@@ -5,25 +5,33 @@ class ytdl(Exception):
     def __init__(self, storage):
         self.storage = storage
     
-    def download(self, yturl):
+    def download(self, yturlm ip):
         import youtube_dl
         try:
             turl = youtube_dl.YoutubeDL({}).extract_info("https://youtu.be/"+yturl, download=False)
         except youtube_dl.utils.DownloadError:
-            from time import sleep
-            sleep(1)
-            turl = youtube_dl.YoutubeDL({}).extract_info("https://youtu.be/"+yturl, download=False)
+            try:
+                from time import sleep
+                sleep(1)
+                turl = youtube_dl.YoutubeDL({}).extract_info("https://youtu.be/"+yturl, download=False)
+            except:
+                self.storage.logger(ip=ip, desc="Error to Download Thumbnail", code=503)
+                raise IndexError
         except youtube_dl.utils.RegexNotFoundError:
-            from time import sleep
-            sleep(1)
-            turl = youtube_dl.YoutubeDL({}).extract_info("https://youtu.be/"+yturl, download=False)
+            try:
+                from time import sleep
+                sleep(1)
+                turl = youtube_dl.YoutubeDL({}).extract_info("https://youtu.be/"+yturl, download=False)
+            except:
+                self.storage.logger(ip=ip, desc="Error to Download Thumbnail", code=503)
+                raise IndexError
         except:
             raise SyntaxError
-        fps = self.movie(yturl, turl)
-        self.thumbnail(yturl, turl)
+        fps = self.movie(yturl, turl, ip)
+        self.thumbnail(yturl, turl, ip)
         return fps
     
-    def movie(self, yturl, turl):
+    def movie(self, yturl, turl, ip):
         #from requests import get
         #data = None
         for i in turl["formats"]:
@@ -48,7 +56,7 @@ class ytdl(Exception):
         return data["fps"]
 
     
-    def thumbnail(self, yturl, turl):
+    def thumbnail(self, yturl, turl, ip):
         from requests import get
         f = open(yturl+".jpg", "wb")
         f.write(get(turl["thumbnails"][int(len(turl["thumbnails"]))-1]["url"]).content)
@@ -57,18 +65,15 @@ class ytdl(Exception):
     def checkurl(self, url):
         from parse import parse
         if "www.youtube.com" in url: 
-            if "&list" in url: 
-                videoid = parse("{}v={id}&list{}", url)["id"]
-            elif "&t" in url: 
-                videoid = parse("{}v={id}&t{}", url)["id"]
+            if "&list" in url: videoid = parse("{}v={id}&list{}", url)["id"]
+            elif "&feature" in url: videoid = parse("{}v={id}&feature{}", url)["id"]
+            elif "&t" in url: videoid = parse("{}v={id}&t{}", url)["id"]
             else: videoid = parse("{}v={id}", url)["id"]
         elif "youtu.be" in url:
-            if "&list" in url: 
-                videoid = parse("youtu.be/{id}?list{}", url)["id"]
-            elif "&t" in url: 
-                videoid = parse("youtu.be/{id}?t{}", url)["id"]
-            else: 
-                videoid = parse("youtu.be/{id}", url)["id"]
+            if "&list" in url: videoid = parse("{}youtu.be/{id}?list{}", url)["id"]
+            elif "&feature" in url: videoid = parse("{}v={id}&feature{}", url)["id"]
+            elif "&t" in url: videoid = parse("{}youtu.be/{id}?t{}", url)["id"]
+            else: videoid = parse("{}youtu.be/{id}", url)["id"]
         else: 
             raise SyntaxError
 

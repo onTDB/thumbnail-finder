@@ -30,6 +30,16 @@ class Storage(Exception):
         if movid in q: return {"status": 200, "data": q[movid]}
         else: return {"status": 404, "line": "movie information is not found."}
 
+    def logger(self, ip, desc, code):
+        import time
+        #time.strftime('[%Y/%m/%d %H:%M:%S] ', time.localtime(time.time()))
+        print("{ip} - - {time} {desc} {code} -".format(ip=ip, desc=desc, time=time.strftime('[%Y/%m/%d %H:%M:%S] ', time.localtime(time.time())), code=str(code)))
+        pass
+
+    def debuglogger(self, ip, desc, code):
+        import time
+        if self.debug == True: print("{ip} - - {time} || DEBUG ||{desc} {code} -".format(ip=ip, desc=desc, time=time.strftime('[%Y/%m/%d %H:%M:%S] ', time.localtime(time.time())), code=str(code)))
+        pass
 
 class server(Exception):
     def __init__(self, storage):
@@ -50,35 +60,46 @@ class server(Exception):
         storage.threads[movid] = None
         storage.now.remove(movid)
 
-    def processstarter(self, param):
-        try:
-            movid = self.storage.ytdl.checkurl(param)
-        except SyntaxError:
+    def processstarter(self, param, ip):
+        try: movid = self.storage.ytdl.checkurl(param)
+        except SyntaxError: 
+            self.storage.logger(ip=ip, desc="Syntax Error. This is not a youtube url", code=400)
             return {"status": 400, "line": "Syntax Error. This is not a youtube url"}
+        self.storage.debuglogger(ip=ip, desc="Youtube URL Checker Complete", code=200)
         
         # Check
         rtn = self.storage.search(movid)
-        if rtn["status"] == 200: return {"status": 200}
-        if movid in self.storage.now: return {"status": 200}
+        if rtn["status"] == 200: 
+            self.storage.logger(ip=ip, desc="Already analyzed.", code=200)
+            return {"status": 200}
+
+        if movid in self.storage.now: 
+            self.storage.logger(ip=ip, desc="Already Now analyzing...", code=200)
+            return {"status": 200}
 
         try:
+            self.storage.debuglogger(ip=ip, desc="Download Start", code=200)
             fps = self.storage.ytdl.download(movid)
-        except:
-            return {"status": 503, "line": "Cannot download Video. Retry again"}
+
+        except: return {"status": 503, "line": "Cannot download Video. Retry again."}
         
         from os.path import isfile
         if isfile(movid+".mp4"): pass
-        else: return {"status": 503, "line": "Cannot download Video. Retry again."}
+        else: 
+            self.storage.logger(ip=ip, desc="Error to Download Video", code=503)
+            return {"status": 503, "line": "Cannot download Video. Retry again."}
         if isfile(movid+".jpg"): pass
         else: return {"status": 503, "line": "Cannot download thumbnail. Retry again."}
         
+        self.storage.debuglogger(ip=ip, desc="Download Complete!", code=200)
+
         # Start
         
         self.storage.now.append(movid)
         self.opencvclassmaker(movid, fps)
         return {"status": 200}
 
-    def movtimestampsearch(self, param):
+    def movtimestampsearch(self, param, url):
         try:
             movid = self.storage.ytdl.checkurl(param)
         except SyntaxError:
@@ -107,39 +128,46 @@ def main():
 
 @app.route('/act', methods=["POST"])
 def requestedpost():
+    ip = request.environ.get('HTTP_X_REAL_IP', request.remote_addr)
     if "url" in request.json: param = request.json["url"]
     elif "id" in request.json: param = request.json["id"]
     else: return {"status": 400, "line": "Cannot find parameter."}
-    return storage.server.processstarter(param)
+    return storage.server.processstarter(param, ip)
     
 
 @app.route('/rtn', methods=["POST"])
 def requestedstatuspost():
+    ip = request.environ.get('HTTP_X_REAL_IP', request.remote_addr)
     if "url" in request.json: param = request.json["url"]
     elif "id" in request.json: param = request.json["id"]
     else: return {"status": 400, "line": "Cannot find parameter."}
-    return storage.server.movtimestampsearch(param)
+    return storage.server.movtimestampsearch(param, ip)
 
 @app.route('/act', methods=["GET"])
 def requestedget():
+    ip = request.environ.get('HTTP_X_REAL_IP', request.remote_addr)
     if "url" in request.args: param = request.args["url"]
     elif "id" in request.args: param = request.args["id"]
     else: return {"status": 400, "line": "Cannot find parameter."}
-    return storage.server.processstarter(param)
+    return storage.server.processstarter(param, ip)
 
 @app.route('/rtn', methods=["GET"])
 def requestedstatusget():
+    ip = request.environ.get('HTTP_X_REAL_IP', request.remote_addr)
     if "url" in request.args: param = request.args["url"]
     elif "id" in request.args: param = request.args["id"]
     else: return {"status": 400, "line": "Cannot find parameter."}
-    return storage.server.movtimestampsearch(param)
+    return storage.server.movtimestampsearch(param, ip)
 
 @app.route('/reset')
 def reset():
+    ip = request.environ.get('HTTP_X_REAL_IP', request.remote_addr)
     try:
         storage.now = []
         storage.threads = {}
+        storage.logger(ip=ip, desc="Success to purge data", code=200)
     except:
+        storage.logger(ip=ip, desc="Internal Server Error. Cannot find error", code=500)
         return {"status": 500, "line": "Internal Server Error. Cannot find error"}
     return {"status": 200}
     
@@ -151,4 +179,4 @@ if __name__ == '__main__':
     #ssl_context = ssl.SSLContext(ssl.PROTOCOL_TLS)
     #ssl_context.load_cert_chain(certfile='certfile.crt', keyfile='private.key', password='password')
     #app.run(host="0.0.0.0", threaded=True, port=443, ssl_context=ssl_context)
-    app.run(host="0.0.0.0", threaded=True, port=8080)
+    app.run(host="0.0.0.0", threaded=True, port=80)

@@ -92,9 +92,9 @@ class opencv():
         self.storage.vidsf = {}
         threads = []
 
-        forfps = int(vc.get(self.cv2.CAP_PROP_FPS)) # video의 fps 가져옴
+        #forfps = int(vc.get(self.cv2.CAP_PROP_FPS)) # Get Video's FPS / Not using
         if self.storage.debug == True:
-            print("forfps: "+str(forfps))
+            print("forfps: "+str(self.storage.fps))
             print("isOpened: "+str(vc.isOpened()))
             print("Nowfps: "+str(vc.get(1)))
             print("\n\n")
