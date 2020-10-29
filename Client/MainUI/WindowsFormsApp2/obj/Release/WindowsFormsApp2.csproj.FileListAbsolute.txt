@@ -1,0 +1,12 @@
+D:\GitHub\thumbnail-finder\Client\MainUI\WindowsFormsApp2\obj\Release\WindowsFormsApp2.csprojAssemblyReference.cache
+D:\GitHub\thumbnail-finder\Client\MainUI\WindowsFormsApp2\obj\Release\WindowsFormsApp2.Form1.resources
+D:\GitHub\thumbnail-finder\Client\MainUI\WindowsFormsApp2\obj\Release\WindowsFormsApp2.Properties.Resources.resources
+D:\GitHub\thumbnail-finder\Client\MainUI\WindowsFormsApp2\obj\Release\WindowsFormsApp2.csproj.GenerateResource.cache
+D:\GitHub\thumbnail-finder\Client\MainUI\WindowsFormsApp2\bin\Release\WindowsFormsApp2.exe.config
+D:\GitHub\thumbnail-finder\Client\MainUI\WindowsFormsApp2\bin\Release\WindowsFormsApp2.exe
+D:\GitHub\thumbnail-finder\Client\MainUI\WindowsFormsApp2\bin\Release\WindowsFormsApp2.pdb
+D:\GitHub\thumbnail-finder\Client\MainUI\WindowsFormsApp2\bin\Release\Newtonsoft.Json.dll
+D:\GitHub\thumbnail-finder\Client\MainUI\WindowsFormsApp2\bin\Release\Newtonsoft.Json.xml
+D:\GitHub\thumbnail-finder\Client\MainUI\WindowsFormsApp2\obj\Release\WindowsFormsApp2.csproj.CopyComplete
+D:\GitHub\thumbnail-finder\Client\MainUI\WindowsFormsApp2\obj\Release\WindowsFormsApp2.exe
+D:\GitHub\thumbnail-finder\Client\MainUI\WindowsFormsApp2\obj\Release\WindowsFormsApp2.pdb

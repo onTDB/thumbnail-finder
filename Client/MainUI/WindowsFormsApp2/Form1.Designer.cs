@@ -51,7 +51,7 @@
             this.input.Name = "input";
             this.input.Size = new System.Drawing.Size(122, 69);
             this.input.TabIndex = 1;
-            this.input.Text = "input";
+            this.input.Text = "GO";
             this.input.UseVisualStyleBackColor = false;
             this.input.Click += new System.EventHandler(this.button1_Click);
             // 
@@ -67,7 +67,7 @@
             // 
             // Reconnect
             // 
-            this.Reconnect.Location = new System.Drawing.Point(367, 20);
+            this.Reconnect.Location = new System.Drawing.Point(370, 24);
             this.Reconnect.Name = "Reconnect";
             this.Reconnect.Size = new System.Drawing.Size(75, 23);
             this.Reconnect.TabIndex = 3;
