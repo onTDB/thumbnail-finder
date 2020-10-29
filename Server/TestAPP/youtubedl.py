@@ -64,11 +64,11 @@ class ytdl(Exception):
             else: videoid = parse("{}v={id}", url)["id"]
         elif "youtu.be" in url:
             if "&list" in url: 
-                videoid = parse("youtu.be/{id}?list{}", url)["id"]
+                videoid = parse("{}youtu.be/{id}?list{}", url)["id"]
             elif "&t" in url: 
-                videoid = parse("youtu.be/{id}?t{}", url)["id"]
+                videoid = parse("{}youtu.be/{id}?t{}", url)["id"]
             else: 
-                videoid = parse("youtu.be/{id}", url)["id"]
+                videoid = parse("{}youtu.be/{id}", url)["id"]
         else: 
             raise SyntaxError
 

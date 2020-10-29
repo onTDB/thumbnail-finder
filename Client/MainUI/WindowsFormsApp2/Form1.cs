@@ -39,6 +39,7 @@ namespace WindowsFormsApp2
             var p = new { Id = textBox1.Text};         
             try
             {
+
                 if (textBox1.Text != "") 
                 {
                     Console.WriteLine("Validation : " + textBox1.Text.Contains("://www.youtube.com/watch?v="));
@@ -48,7 +49,8 @@ namespace WindowsFormsApp2
                         input.Visible = false;
                         postParams.Append("?url=" + container);
                         byte[] result = Encoding.UTF8.GetBytes(postParams.ToString());
-                        HttpWebRequest wReq = (HttpWebRequest)WebRequest.Create("http://xnglwmx.purl.zz.am:8080/act?url="+ container);
+                        //HttpWebRequest wReq = (HttpWebRequest)WebRequest.Create("http://xnglwmx.purl.zz.am:8080/act?url="+ container);
+                        HttpWebRequest wReq = (HttpWebRequest)WebRequest.Create("http://127.0.0.1:8080/act?url=" + container);
                         wReq.Method = "POST";
                         wReq.ContentType = "application/x-www-form-urlencoded";
                         wReq.ContentLength = result.Length;
@@ -64,13 +66,15 @@ namespace WindowsFormsApp2
 
                     
                         MessageBox.Show(rtn["status"].ToString());
+                       
                         if (rtn["status"].ToString() == "200")
                         {
                             while(true)
                             {
-                                HttpWebRequest wReq1 = (HttpWebRequest)WebRequest.Create("http://xnglwmx.purl.zz.am:8080/rtn?url=" + container);
-                                
-                                
+                                //HttpWebRequest wReq1 = (HttpWebRequest)WebRequest.Create("http://xnglwmx.purl.zz.am:8080/rtn?url=" + container);
+                                HttpWebRequest wReq1= (HttpWebRequest)WebRequest.Create("http://127.0.0.1:8080/rtn?url=" + container);
+
+
                                 wReq1.Method = "POST";
                                 wReq1.ContentType = "application/x-www-form-urlencoded";
                                 Stream postDataStream1 = wReq1.GetRequestStream();
@@ -109,7 +113,13 @@ namespace WindowsFormsApp2
                     }finally
                     {
                         Reconnect.Visible = true;
-                        returnURL = "https://youtu.be/" + container.Substring(container.IndexOf("=") + 1) + "?t=" + rtn1["data"]["timestamp"].ToString();
+                        Console.WriteLine(container.IndexOf("https://youtu.be/") + 1);
+                        //returnURL = "https://youtu.be/" + container.Substring(container.IndexOf("=") + 1) + "?t=" + rtn1["data"]["timestamp"].ToString();
+                        returnURL = "https://youtu.be/" + container.Substring(container.IndexOf("https://youtu.be/") + 1) + "?t=" + rtn1["data"]["timestamp"].ToString();
+                        
+                        string plainurl = "https://youtu.be/";
+                        Console.Write(plainurl[plainurl.IndexOf("e/") + 2]);
+
                         process = Process.Start(returnURL);
                         textBox1.Text = null;                        
                     }
