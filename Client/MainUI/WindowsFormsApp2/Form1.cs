@@ -82,8 +82,14 @@ namespace WindowsFormsApp2
                 {
                     
                     //Console.WriteLine("Validation : " + textBox1.Text.Contains("://www.youtube.com/watch?v="));
+
                     if (textBox1.Text.Contains("youtu.be/"))
                     {
+
+                        if (textBox1.Text.Contains("?t="))
+                        {
+                            textBox1.Text = textBox1.Text.Substring(0, textBox1.Text.IndexOf("?"));
+                        }
                         container = textBox1.Text;
                         input.Visible = false;
                         try
@@ -113,6 +119,7 @@ namespace WindowsFormsApp2
                                         else
                                         {
                                             MessageBox.Show("서버에 문제 발생" + rtn["line"]);
+                                            Console.WriteLine(rtn["line"]);
                                             break;
                                         }
                                     }
