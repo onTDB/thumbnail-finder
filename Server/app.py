@@ -39,10 +39,9 @@ class Storage(Exception):
     def debuglogger(self, ip, desc, code, frame=None):
         import time
         if self.debug == True: 
-            if frame == None: print("{ip} - - {time} || DEBUG ||{desc} {code} -".format(ip=ip, desc=desc, time=time.strftime('[%Y/%m/%d %H:%M:%S] ', time.localtime(time.time())), code=str(code)))
+            if frame == None: print("{ip} - - {time} || DEBUG || {desc} {code} -".format(ip=ip, desc=desc, time=time.strftime('[%Y/%m/%d %H:%M:%S] ', time.localtime(time.time())), code=str(code)))
             else: print("{ip} - - {time} || DEBUG || OPENCV || {frame} || {desc} {code} -".format(ip=ip, desc=desc, time=time.strftime('[%Y/%m/%d %H:%M:%S] ', time.localtime(time.time())), code=str(code), frame=frame))
         pass
-
 
 
 class server(Exception):
@@ -72,7 +71,7 @@ class server(Exception):
         self.storage.debuglogger(ip=ip, desc="Youtube URL Checker OK", code=200)
         
         # Check
-        rtn, turl = self.storage.search(movid)
+        rtn = self.storage.search(movid)
         if rtn["status"] == 200: 
             self.storage.logger(ip=ip, desc="Already analyzed.", code=200)
             return {"status": 200}
@@ -84,7 +83,7 @@ class server(Exception):
         # Download Start
 
         self.storage.debuglogger(ip=ip, desc="Download Start", code=200)
-        try: fps = self.storage.ytdl.download(movid)
+        try: fps, turl = self.storage.ytdl.download(movid, ip)
 
         except: return {"status": 503, "line": "Cannot download Video. Retry again."}
         
@@ -105,15 +104,17 @@ class server(Exception):
         self.opencvclassmaker(movid, fps, ip, turl)
         return {"status": 200}
 
-    def movtimestampsearch(self, param, url):
+    def movtimestampsearch(self, param, ip):
         try:
-            movid = self.storage.ytdl.checkurl(param)
+            movid = self.storage.ytdl.checkurl(param, ip)
         except SyntaxError:
+            self.storage.debuglogger(ip=ip, desc="Syntax Error. This is not a youtube url", code=400)
             return {"status": 400, "line": "Syntax Error. This is not a youtube url"}
         
         if movid in self.storage.now:
+            self.storage.debuglogger(ip=ip, desc="Service Unavailable. This movie is now analyzing. Please try again.", code=500)
             return {"status": 503, "line": "Service Unavailable. This movie is now analyzing. Please try again."}
-            
+        
         return self.storage.search(movid)
 
 
