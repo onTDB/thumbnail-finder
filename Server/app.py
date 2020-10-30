@@ -50,18 +50,18 @@ class server(Exception):
         self.storage = storage
         pass
 
-    def opencvclassmaker(self, movid, fps, ip):
+    def opencvclassmaker(self, movid, fps, ip, turl):
         from threading import Thread
-        t = Thread(target=self.opencvclassstarter, args=(self.storage, movid, fps, ip))
+        t = Thread(target=self.opencvclassstarter, args=(self.storage, movid, fps, ip, turl))
         self.storage.debuglogger(ip=ip, desc="OPENCV Threading Start", code=200)
         t.start()
-        self.storage.debuglogger(ip=ip, desc="threading list append complete", code=200)
+        self.storage.debuglogger(ip=ip, desc="threading list append OK", code=200)
         self.storage.threads.update({movid: t})
     
-    def opencvclassstarter(self, storage, movid, fps, ip):
+    def opencvclassstarter(self, storage, movid, fps, ip, turl):
         from opencv import cvstorage
-        self.storage.debuglogger(ip=ip, desc="opencv class import complete!", code=200)
-        rtn = cvstorage(storage, thumbnailpath="./{movid}.jpg".format(movid=movid), vidpath="./{movid}.mp4".format(movid=movid), fps=fps, ip=ip).opencv.imgparse()
+        self.storage.debuglogger(ip=ip, desc="opencv class import OK", code=200)
+        rtn = cvstorage(storage, thumbnailpath="./{movid}.jpg".format(movid=movid), vidpath="./{movid}.mp4".format(movid=movid), fps=fps, ip=ip, turl=turl).opencv.imgparse()
         storage.save(movid, rtn)
         storage.threads[movid] = None
         storage.now.remove(movid)
@@ -69,10 +69,10 @@ class server(Exception):
     def processstarter(self, param, ip):
         try: movid = self.storage.ytdl.checkurl(param, ip)
         except SyntaxError: return {"status": 400, "line": "Syntax Error. This is not a youtube url"}
-        self.storage.debuglogger(ip=ip, desc="Youtube URL Checker Complete", code=200)
+        self.storage.debuglogger(ip=ip, desc="Youtube URL Checker OK", code=200)
         
         # Check
-        rtn = self.storage.search(movid)
+        rtn, turl = self.storage.search(movid)
         if rtn["status"] == 200: 
             self.storage.logger(ip=ip, desc="Already analyzed.", code=200)
             return {"status": 200}
@@ -96,13 +96,13 @@ class server(Exception):
         if isfile(movid+".jpg"): pass
         else: return {"status": 503, "line": "Cannot download thumbnail. Retry again."}
         
-        self.storage.debuglogger(ip=ip, desc="Download Complete!", code=200)
+        self.storage.debuglogger(ip=ip, desc="Download OK", code=200)
 
         # Start
         self.storage.now.append(movid)
-        self.storage.debuglogger(ip=ip, desc="Now analyze append Complete!", code=200)
+        self.storage.debuglogger(ip=ip, desc="Now analyze append OK", code=200)
         self.storage.debuglogger(ip=ip, desc="!!OPENCV THREAD START!!", code=200)
-        self.opencvclassmaker(movid, fps, ip)
+        self.opencvclassmaker(movid, fps, ip, turl)
         return {"status": 200}
 
     def movtimestampsearch(self, param, url):

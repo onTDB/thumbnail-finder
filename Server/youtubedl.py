@@ -6,9 +6,8 @@ class ytdl(Exception):
         self.storage = storage
     
     def download(self, yturl, ip):
-        self.storage.debuglogger(ip=ip, desc="Import youtube_dl", code=200)
         import youtube_dl
-        self.storage.debuglogger(ip=ip, desc="Import youtube_dl Complete.", code=200)
+        self.storage.debuglogger(ip=ip, desc="Import youtube_dl OK", code=200)
         try:
             self.storage.debuglogger(ip=ip, desc="Start to get video info", code=200)
             turl = youtube_dl.YoutubeDL({}).extract_info("https://youtu.be/"+yturl, download=False)
@@ -33,10 +32,14 @@ class ytdl(Exception):
         except:
             self.storage.logger(ip=ip, desc="Something Went Wrong!! youtubedl.py::29", code=503)
             raise SyntaxError
-        self.storage.debuglogger(ip=ip, desc="Get video info Complete!", code=200)
+        self.storage.debuglogger(ip=ip, desc="Get video info OK", code=200)
+
+        print("\n\n")
+        print(turl)
+
         fps = self.movie(yturl, turl, ip)
         self.thumbnail(yturl, turl, ip)
-        return fps
+        return fps, turl
     
     def movie(self, yturl, turl, ip):
         #from requests import get
@@ -66,7 +69,7 @@ class ytdl(Exception):
         if isfile(yturl+".mp4"): pass
         else: system("youtube-dl --no-warnings -f 134 -o %(id)s.%(ext)s {url}".format(url="https://youtu.be/"+yturl))
 
-        self.storage.debuglogger(ip=ip, desc="Download video command execute Complete!", code=200)
+        self.storage.debuglogger(ip=ip, desc="Download video command execute OK", code=200)
 
         return data["fps"]
 
