@@ -36,10 +36,14 @@ class Storage(Exception):
         print("{ip} - - {time} {desc} {code} -".format(ip=ip, desc=desc, time=time.strftime('[%Y/%m/%d %H:%M:%S] ', time.localtime(time.time())), code=str(code)))
         pass
 
-    def debuglogger(self, ip, desc, code):
+    def debuglogger(self, ip, desc, code, frame=None):
         import time
-        if self.debug == True: print("{ip} - - {time} || DEBUG ||{desc} {code} -".format(ip=ip, desc=desc, time=time.strftime('[%Y/%m/%d %H:%M:%S] ', time.localtime(time.time())), code=str(code)))
+        if self.debug == True: 
+            if frame == None: print("{ip} - - {time} || DEBUG ||{desc} {code} -".format(ip=ip, desc=desc, time=time.strftime('[%Y/%m/%d %H:%M:%S] ', time.localtime(time.time())), code=str(code)))
+            else: print("{ip} - - {time} || DEBUG || OPENCV || {frame} || {desc} {code} -".format(ip=ip, desc=desc, time=time.strftime('[%Y/%m/%d %H:%M:%S] ', time.localtime(time.time())), code=str(code), frame=frame))
         pass
+
+
 
 class server(Exception):
     def __init__(self, storage):

@@ -9,7 +9,9 @@ class cvstorage():
         self.vidpath = vidpath
         self.thumbnail = None
         self.opencv = opencv(self)
-        self.debug = False
+        self.debug = self.mainstorage.debug
+        self.logger = self.mainstorage.logger
+        self.debuglogger = self.mainstorage.debuglogger
 
 class tempstr():
     def __init__(self):
@@ -19,6 +21,7 @@ class tempstr():
 
 class storage():
     def __init__(self, thumbnailpath, vidpath):
+        self.id = "DEBUG"
         self.count = []
         self.mainstorage = tempstr()
         self.thumbnailpath = thumbnailpath
@@ -26,6 +29,21 @@ class storage():
         self.thumbnail = None
         self.opencv = opencv(self)
         self.debug = False
+    
+    def logger(self, ip, desc, code):
+        import time
+        #time.strftime('[%Y/%m/%d %H:%M:%S] ', time.localtime(time.time()))
+        print("{ip} - - {time} {desc} {code} -".format(ip=ip, desc=desc, time=time.strftime('[%Y/%m/%d %H:%M:%S] ', time.localtime(time.time())), code=str(code)))
+        pass
+
+    def debuglogger(self, ip, desc, code):
+        import time
+        if self.debug == True: print("{ip} - - {time} || DEBUG || {desc} {code} -".format(ip=ip, desc=desc, time=time.strftime('[%Y/%m/%d %H:%M:%S] ', time.localtime(time.time())), code=str(code)))
+        pass
+
+
+
+        
 
 class opencv():
     def __init__(self, storage):
@@ -39,6 +57,7 @@ class opencv():
         pass
 
     def core(self, storage, vidimg, frame):
+        self.storage.debuglogger(ip=self.storage.ip, desc="Entry Of OpenCV Core::"+str(int(frame)), code=200, frame=frame)
         #img = self.cv2.imread(vidimg,0)
         sift = self.sift
 
@@ -46,10 +65,13 @@ class opencv():
         des1 = self.des1
         kp2, des2 = sift.detectAndCompute(vidimg,None)
 
+        self.storage.debuglogger(ip=self.storage.ip, desc="Load all images", code=200, frame=frame)
+
         FLANN_INDEX_KDTREE = 0
         index_params = dict(algorithm = FLANN_INDEX_KDTREE, trees = 5)
         search_params = dict(checks=50)   
         flann = self.cv2.FlannBasedMatcher(index_params,search_params)
+        self.storage.debuglogger(ip=self.storage.ip, desc="", code=200, frame=frame)
         if self.storage.debug == True:
             from matplotlib import pyplot as plt
             plt.imshow(vidimg,),plt.show()
@@ -87,12 +109,24 @@ class opencv():
             else: storage.count.append(0)
 
     def imgparse(self):
+        self.storage.debuglogger(ip=self.storage.ip, desc="LOADED Img Parser", code=200)
         from threading import Thread
         vc = self.cv2.VideoCapture(self.storage.vidpath)
         self.storage.vids = {}
         self.storage.vidsf = {}
         threads = []
 
+
+        self.storage.debuglogger(ip=self.storage.ip, desc="Clear methods Complete!", code=200)
+
+
+        self.storage.debuglogger(ip=self.storage.ip, desc="===== VIDEO INFO =====", code=200)
+        self.storage.debuglogger(ip=self.storage.ip, desc="VideoID: "+self.storage.vidpath, code=200)
+        self.storage.debuglogger(ip=self.storage.ip, desc="VideoFPS: "+str(self.storage.fps), code=200)
+        self.storage.debuglogger(ip=self.storage.ip, desc="Is Opened: "+str(vc.isOpened()), code=200)
+        self.storage.debuglogger(ip=self.storage.ip, desc="NowFps: "+str(int(vc.get(1))), code=200)
+        self.storage.debuglogger(ip=self.storage.ip, desc="======================", code=200)
+        
         #forfps = int(vc.get(self.cv2.CAP_PROP_FPS)) # Get Video's FPS / Not using
         if self.storage.debug == True:
             print("forfps: "+str(self.storage.fps))
@@ -111,17 +145,21 @@ class opencv():
             #    plt.imshow(img,),plt.show()
             #    exit()
 
-            if self.storage.debug == True:
-                print("forfps: "+str(self.storage.fps))
-                print("isOpened: "+str(vc.isOpened()))
-                print("Nowfps: "+str(vc.get(1)))
-                print("\n\n")
+            self.storage.debuglogger(ip=self.storage.ip, desc="===== FPS INFO =====", code=200)
+            self.storage.debuglogger(ip=self.storage.ip, desc="VideoFPS: "+str(self.storage.fps), code=200)
+            self.storage.debuglogger(ip=self.storage.ip, desc="NowFps: "+str(int(vc.get(1))), code=200)
+
+
             if (int(vc.get(1)) % self.storage.fps == 0): 
                 #print("Nowfps: "+str(vc.get(1)))
                 tmp = Thread(target=self.core, args=(self.storage, img, vc.get(1),))
                 tmp.start()
                 threads.append(tmp)
                 #self.core(self.storage, img, vc.get(1))
+                self.storage.debuglogger(ip=self.storage.ip, desc="Stauts: True", code=200)
+            else:
+                self.storage.debuglogger(ip=self.storage.ip, desc="Stauts: False", code=200)
+            self.storage.debuglogger(ip=self.storage.ip, desc="====================", code=200)
 
             if int(vc.get(1)) == int(vc.get(self.cv2.CAP_PROP_FRAME_COUNT)): break
 
