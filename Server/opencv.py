@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 class cvstorage():
-    def __init__(self, sto, thumbnailpath, vidpath, fps, ip):
+    def __init__(self, sto, thumbnailpath, vidpath, fps, ip, turl):
+        self.ytdldata = turl
         self.ip = ip
         self.fps = fps
         self.count = []
@@ -40,9 +41,6 @@ class storage():
         import time
         if self.debug == True: print("{ip} - - {time} || DEBUG || {desc} {code} -".format(ip=ip, desc=desc, time=time.strftime('[%Y/%m/%d %H:%M:%S] ', time.localtime(time.time())), code=str(code)))
         pass
-
-
-
         
 
 class opencv():
@@ -71,27 +69,26 @@ class opencv():
         index_params = dict(algorithm = FLANN_INDEX_KDTREE, trees = 5)
         search_params = dict(checks=50)   
         flann = self.cv2.FlannBasedMatcher(index_params,search_params)
-        self.storage.debuglogger(ip=self.storage.ip, desc="", code=200, frame=frame)
-        if self.storage.debug == True:
-            from matplotlib import pyplot as plt
-            plt.imshow(vidimg,),plt.show()
+        self.storage.debuglogger(ip=self.storage.ip, desc="FlannBasedMatcher OK", code=200, frame=frame)
+        #if self.storage.debug == True:
+        #    from matplotlib import pyplot as plt
+        #    plt.imshow(vidimg,),plt.show()
         try:
-            matches = flann.knnMatch(des1,des2,k=2)
+            matches = flann.knnMatch(des1,des2,k=2) 
+            self.storage.debuglogger(ip=self.storage.ip, desc="Match Check OK", code=200, frame=frame)
         
             matchesMask = [[0,0] for i in range(len(matches))]
+            self.storage.debuglogger(ip=self.storage.ip, desc="MatchTask OK", code=200, frame=frame)
 
-            a = []
             rtn = 0
             for i,(m,n) in enumerate(matches):
                 if m.distance < 0.3*n.distance:
+                    self.storage.debuglogger(ip=self.storage.ip, desc="Matching "+str(rtn+1), code=200, frame=frame)
                     matchesMask[i]=[1,0]
                     rtn += 1
             
             if self.storage.debug == True:
-                draw_params = dict(matchColor = (0,255,0),
-                                singlePointColor = (255,0,0),
-                                matchesMask = matchesMask,
-                                flags = 0)
+                draw_params = dict(matchColor = (0,255,0), singlePointColor = (255,0,0), matchesMask = matchesMask, flags = 0)
                 img3 = self.cv2.drawMatchesKnn(self.storage.thumbnail,kp1,vidimg,kp2,matches,None,**draw_params)
                 from matplotlib import pyplot as plt
                 plt.imshow(img3,),plt.show()
@@ -101,7 +98,9 @@ class opencv():
             else: storage.vidsf.update({str(rtn): [frame]})
             if rtn in storage.count: pass
             else: storage.count.append(rtn)
+            self.storage.debuglogger(ip=self.storage.ip, desc="Append match: "+str(rtn), code=200, frame=frame)
         except:
+            self.storage.debuglogger(ip=self.storage.ip, desc="Append match: 0", code=200, frame=frame)
             storage.vids.update({str(frame): 0})
             if str(0) in storage.vidsf: storage.vidsf[str(0)].append(frame)
             else: storage.vidsf.update({str(0): [frame]})
@@ -117,7 +116,7 @@ class opencv():
         threads = []
 
 
-        self.storage.debuglogger(ip=self.storage.ip, desc="Clear methods Complete!", code=200)
+        self.storage.debuglogger(ip=self.storage.ip, desc="Clear methods OK", code=200)
 
 
         self.storage.debuglogger(ip=self.storage.ip, desc="===== VIDEO INFO =====", code=200)
@@ -128,11 +127,11 @@ class opencv():
         self.storage.debuglogger(ip=self.storage.ip, desc="======================", code=200)
         
         #forfps = int(vc.get(self.cv2.CAP_PROP_FPS)) # Get Video's FPS / Not using
-        if self.storage.debug == True:
-            print("forfps: "+str(self.storage.fps))
-            print("isOpened: "+str(vc.isOpened()))
-            print("Nowfps: "+str(vc.get(1)))
-            print("\n\n")
+        #if self.storage.debug == True:
+        #    print("forfps: "+str(self.storage.fps))
+        #    print("isOpened: "+str(vc.isOpened()))
+        #    print("Nowfps: "+str(vc.get(1)))
+        #    print("\n\n")
         
         
 
@@ -177,7 +176,10 @@ class opencv():
         print("\n")
         print("{frame} is the best. maches: {maches}".format(frame=self.storage.vidsf[str(self.storage.count[0])][0], maches=self.storage.count[0]))
         print(str(str(int(self.storage.vidsf[str(self.storage.count[0])][0]/24/60))+":"+str(int(int(self.storage.vidsf[str(self.storage.count[0])][0]/24)-int(self.storage.vidsf[str(self.storage.count[0])][0]/24/60)*60))))
-        return {"frame": self.storage.vidsf[str(self.storage.count[0])][0], "maches": self.storage.count[0], "timestamp": int(self.storage.vidsf[str(self.storage.count[0])][0]/24), "timestampMinSec": str(str(int(self.storage.vidsf[str(self.storage.count[0])][0]/24/60))+":"+str(int(int(self.storage.vidsf[str(self.storage.count[0])][0]/24)-int(self.storage.vidsf[str(self.storage.count[0])][0]/24/60)*60)))}
+        f = open(self.storage.ytdldata["id"]+".jpg", "rb")
+        a = f.read()
+        f.close()
+        return {"frame": self.storage.vidsf[str(self.storage.count[0])][0], "maches": self.storage.count[0], "timestamp": int(self.storage.vidsf[str(self.storage.count[0])][0]/24), "timestampMinSec": str(str(int(self.storage.vidsf[str(self.storage.count[0])][0]/24/60))+":"+str(int(int(self.storage.vidsf[str(self.storage.count[0])][0]/24)-int(self.storage.vidsf[str(self.storage.count[0])][0]/24/60)*60))), "youtube-dl-data": self.storage.ytdldata, "thumbnail": a}
 
 
 
