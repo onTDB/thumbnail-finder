@@ -1,8 +1,8 @@
-matplotlib
-opencv-python==3.4.2.16
 opencv-contrib-python==3.4.2.16
-parse
-pip
-youtube-dl
-flask
+opencv-python==3.4.2.16
 flask_compress
+youtube-dl
+matplotlib
+requests
+flask
+parse
