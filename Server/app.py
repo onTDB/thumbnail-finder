@@ -3,6 +3,7 @@ class Storage(Exception):
     def __init__(self):
         from youtubedl import ytdl
         import cv2
+        self.storage = self
         self.server = server(self)
         self.debug = False
         self.cv2 = cv2
@@ -12,23 +13,36 @@ class Storage(Exception):
         self.threads = {}
         pass
     
-    def save(self, movid, arg):
+    def save(self, movid, arg, ip):
         from json import loads, dumps
-        f = open("data.json", "r")
-        q = loads(f.read())
-        q.update({movid: arg})
-        f.close()
+        from os.path import isfile
+        if isfile("data.json"): 
+            f = open("data.json", "r")
+            try: q = loads(f.read())
+            except: 
+                self.storage.debuglogger(ip=ip, desc="Cannot get jsondata", code=503)
+                return {"status": 503, "line": "Cannot get data file."}
+            q.update({movid: arg})
+            f.close()
         f = open("data.json", "w")
         f.write(dumps(q))
         f.close()
     
-    def search(self, movid):
+    def search(self, movid, ip):
         from json import loads
-        f = open("data.json", "r")
-        q = loads(f.read())
-        f.close()
-        if movid in q: return {"status": 200, "data": q[movid]}
-        else: return {"status": 404, "line": "movie information is not found."}
+        from os.path import isfile
+        if isfile("data.json"): 
+            f = open("data.json", "r")
+            try: q = loads(f.read())
+            except: 
+                self.storage.debuglogger(ip=ip, desc="Cannot get jsondata", code=503)
+                return {"status": 503, "line": "Cannot get data file."}
+            f.close()
+            if movid in q: return {"status": 200, "data": q[movid]}
+            else: return {"status": 404, "line": "movie information is not found."}
+        else: 
+            self.storage.debuglogger(ip=ip, desc="Cannot find data.json", code=503)
+            return {"status": 503, "line": "Cannot find data file."}
 
     def logger(self, ip, desc, code):
         import time
@@ -61,7 +75,7 @@ class server(Exception):
         from opencv import cvstorage
         self.storage.debuglogger(ip=ip, desc="opencv class import OK", code=200)
         rtn = cvstorage(storage, thumbnailpath="./{movid}.jpg".format(movid=movid), vidpath="./{movid}.mp4".format(movid=movid), fps=fps, ip=ip, turl=turl).opencv.imgparse()
-        storage.save(movid, rtn)
+        storage.save(movid, rtn, ip)
         storage.threads[movid] = None
         storage.now.remove(movid)
 
@@ -71,7 +85,7 @@ class server(Exception):
         self.storage.debuglogger(ip=ip, desc="Youtube URL Checker OK", code=200)
         
         # Check
-        rtn = self.storage.search(movid)
+        rtn = self.storage.search(movid, ip)
         if rtn["status"] == 200: 
             self.storage.logger(ip=ip, desc="Already analyzed.", code=200)
             return {"status": 200}
@@ -115,7 +129,7 @@ class server(Exception):
             self.storage.debuglogger(ip=ip, desc="Service Unavailable. This movie is now analyzing. Please try again.", code=500)
             return {"status": 503, "line": "Service Unavailable. This movie is now analyzing. Please try again."}
         
-        return self.storage.search(movid)
+        return self.storage.search(movid, ip)
 
 
 from flask import Flask, request, render_template
@@ -136,8 +150,10 @@ def main():
 @app.route('/act', methods=["POST"])
 def requestedpost():
     ip = request.environ.get('HTTP_X_REAL_IP', request.remote_addr)
-    if "url" in request.json: param = request.json["url"]
-    elif "id" in request.json: param = request.json["id"]
+    #if "url" in request.json: param = request.json["url"]
+    #elif "id" in request.json: param = request.json["id"]
+    if "url" in request.args: param = request.args["url"]
+    elif "id" in request.args: param = request.args["id"]
     else: return {"status": 400, "line": "Cannot find parameter."}
     return storage.server.processstarter(param, ip)
     
@@ -145,8 +161,10 @@ def requestedpost():
 @app.route('/rtn', methods=["POST"])
 def requestedstatuspost():
     ip = request.environ.get('HTTP_X_REAL_IP', request.remote_addr)
-    if "url" in request.json: param = request.json["url"]
-    elif "id" in request.json: param = request.json["id"]
+    #if "url" in request.json: param = request.json["url"]
+    #elif "id" in request.json: param = request.json["id"]
+    if "url" in request.args: param = request.args["url"]
+    elif "id" in request.args: param = request.args["id"]
     else: return {"status": 400, "line": "Cannot find parameter."}
     return storage.server.movtimestampsearch(param, ip)
 
@@ -186,4 +204,4 @@ if __name__ == '__main__':
     #ssl_context = ssl.SSLContext(ssl.PROTOCOL_TLS)
     #ssl_context.load_cert_chain(certfile='certfile.crt', keyfile='private.key', password='password')
     #app.run(host="0.0.0.0", threaded=True, port=443, ssl_context=ssl_context)
-    app.run(host="0.0.0.0", threaded=True, port=80)
+    app.run(host="0.0.0.0", threaded=True, port=8080)

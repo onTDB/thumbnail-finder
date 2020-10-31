@@ -107,7 +107,7 @@ class opencv():
             if 0 in storage.count: pass
             else: storage.count.append(0)
 
-    def imgparse(self):
+    def vidparse(self):
         self.storage.debuglogger(ip=self.storage.ip, desc="LOADED Img Parser", code=200)
         from threading import Thread
         vc = self.cv2.VideoCapture(self.storage.vidpath)
@@ -193,7 +193,7 @@ if __name__ == "__main__":
     tpath = "./testmov/thumbnail_32si5cfrCNc.jpg"
     vpath = "./testmov/32si5cfrCNc.mp4"
     storage = storage(thumbnailpath=tpath, vidpath=vpath)
-    storage.opencv.imgparse()
+    storage.opencv.vidparse()
 
     print(time.time()-a)
     pass
