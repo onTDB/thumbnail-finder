@@ -74,7 +74,7 @@ class server(Exception):
     def opencvclassstarter(self, storage, movid, fps, ip, turl):
         from opencv import cvstorage
         self.storage.debuglogger(ip=ip, desc="opencv class import OK", code=200)
-        rtn = cvstorage(storage, thumbnailpath="./{movid}.jpg".format(movid=movid), vidpath="./{movid}.mp4".format(movid=movid), fps=fps, ip=ip, turl=turl).opencv.imgparse()
+        rtn = cvstorage(storage, thumbnailpath="./{movid}.jpg".format(movid=movid), vidpath="./{movid}.mp4".format(movid=movid), fps=fps, ip=ip, turl=turl).opencv.vidparse()
         storage.save(movid, rtn, ip)
         storage.threads[movid] = None
         storage.now.remove(movid)

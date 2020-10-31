@@ -108,6 +108,8 @@ class opencv():
             else: storage.count.append(0)
 
     def vidparse(self):
+        from time import time
+        starttime = time()
         self.storage.debuglogger(ip=self.storage.ip, desc="LOADED Img Parser", code=200)
         from threading import Thread
         vc = self.cv2.VideoCapture(self.storage.vidpath)
@@ -171,14 +173,22 @@ class opencv():
             if i == len(threads): break
             threads[i].join()
             i += 1
-        
+        endtime = time()
+
+        self.storage.debuglogger(ip=self.storage.ip, desc="==OpenCV Result==", code=200)
         self.storage.count.sort(reverse=True)
-        print(self.storage.vids)
-        print("\n")
-        print(self.storage.vidsf)
-        print("\n")
-        print("{frame} is the best. maches: {maches}".format(frame=self.storage.vidsf[str(self.storage.count[0])][0], maches=self.storage.count[0]))
-        print(str(str(int(self.storage.vidsf[str(self.storage.count[0])][0]/24/60))+":"+str(int(int(self.storage.vidsf[str(self.storage.count[0])][0]/24)-int(self.storage.vidsf[str(self.storage.count[0])][0]/24/60)*60))))
+        self.storage.debuglogger(ip=self.storage.ip, desc="ID: {movid}".format(movid=self.storage.turl["id"]), code=200)
+        self.storage.debuglogger(ip=self.storage.ip, desc="Take Time: {time}".format(time=str(int(endtime-starttime))), code=200)
+        self.storage.debuglogger(ip=self.storage.ip, desc="\n", code=200)
+        self.storage.debuglogger(ip=self.storage.ip, desc=str(self.storage.vids), code=200)
+        self.storage.debuglogger(ip=self.storage.ip, desc="\n", code=200)
+        self.storage.debuglogger(ip=self.storage.ip, desc=str(self.storage.vidsf), code=200)
+        self.storage.debuglogger(ip=self.storage.ip, desc="\n", code=200)
+        self.storage.debuglogger(ip=self.storage.ip, desc="{frame} is the best. maches: {maches}".format(frame=self.storage.vidsf[str(self.storage.count[0])][0], maches=self.storage.count[0]), code=200)
+        self.storage.debuglogger(ip=self.storage.ip, desc="\n", code=200)
+        self.storage.debuglogger(ip=self.storage.ip, desc=str(str(int(self.storage.vidsf[str(self.storage.count[0])][0]/24/60))+":"+str(int(int(self.storage.vidsf[str(self.storage.count[0])][0]/24)-int(self.storage.vidsf[str(self.storage.count[0])][0]/24/60)*60))), code=200)        
+        self.storage.debuglogger(ip=self.storage.ip, desc="\n\n", code=200)
+
         f = open(self.storage.ytdldata["id"]+".jpg", "rb")
         a = f.read()
         f.close()

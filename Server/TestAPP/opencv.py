@@ -41,9 +41,6 @@ class storage():
         import time
         if self.debug == True: print("{ip} - - {time} || DEBUG || {desc} {code} -".format(ip=ip, desc=desc, time=time.strftime('[%Y/%m/%d %H:%M:%S] ', time.localtime(time.time())), code=str(code)))
         pass
-
-
-
         
 
 class opencv():
@@ -85,8 +82,8 @@ class opencv():
 
             rtn = 0
             for i,(m,n) in enumerate(matches):
-                self.storage.debuglogger(ip=self.storage.ip, desc="Check ", code=200, frame=frame)
                 if m.distance < 0.3*n.distance:
+                    self.storage.debuglogger(ip=self.storage.ip, desc="Matching "+str(rtn+1), code=200, frame=frame)
                     matchesMask[i]=[1,0]
                     rtn += 1
             
@@ -111,6 +108,8 @@ class opencv():
             else: storage.count.append(0)
 
     def vidparse(self):
+        from time import time
+        starttime = time()
         self.storage.debuglogger(ip=self.storage.ip, desc="LOADED Img Parser", code=200)
         from threading import Thread
         vc = self.cv2.VideoCapture(self.storage.vidpath)
@@ -147,20 +146,23 @@ class opencv():
             #    plt.imshow(img,),plt.show()
             #    exit()
 
-            self.storage.debuglogger(ip=self.storage.ip, desc="===== FPS INFO =====", code=200)
-            self.storage.debuglogger(ip=self.storage.ip, desc="VideoFPS: "+str(self.storage.fps), code=200)
-            self.storage.debuglogger(ip=self.storage.ip, desc="NowFps: "+str(int(vc.get(1))), code=200)
+            #self.storage.debuglogger(ip=self.storage.ip, desc="===== FPS INFO =====", code=200)
+            #self.storage.debuglogger(ip=self.storage.ip, desc="VideoFPS: "+str(self.storage.fps), code=200)
+            #self.storage.debuglogger(ip=self.storage.ip, desc="NowFps: "+str(int(vc.get(1))), code=200)
 
 
             if (int(vc.get(1)) % self.storage.fps == 0): 
+                self.storage.debuglogger(ip=self.storage.ip, desc="===== FPS INFO =====", code=200)
+                self.storage.debuglogger(ip=self.storage.ip, desc="VideoFPS: "+str(self.storage.fps), code=200)
+                self.storage.debuglogger(ip=self.storage.ip, desc="NowFps: "+str(int(vc.get(1))), code=200)
                 #print("Nowfps: "+str(vc.get(1)))
                 tmp = Thread(target=self.core, args=(self.storage, img, vc.get(1),))
                 tmp.start()
                 threads.append(tmp)
                 #self.core(self.storage, img, vc.get(1))
-                self.storage.debuglogger(ip=self.storage.ip, desc="Stauts: True", code=200)
-            else:
-                self.storage.debuglogger(ip=self.storage.ip, desc="Stauts: False", code=200)
+                #self.storage.debuglogger(ip=self.storage.ip, desc="Stauts: True", code=200)
+            #else:
+                #self.storage.debuglogger(ip=self.storage.ip, desc="Stauts: False", code=200)
             self.storage.debuglogger(ip=self.storage.ip, desc="====================", code=200)
 
             if int(vc.get(1)) == int(vc.get(self.cv2.CAP_PROP_FRAME_COUNT)): break
@@ -171,18 +173,26 @@ class opencv():
             if i == len(threads): break
             threads[i].join()
             i += 1
-        
+        endtime = time()
+
+        self.storage.debuglogger(ip=self.storage.ip, desc="==OpenCV Result==", code=200)
         self.storage.count.sort(reverse=True)
-        print(self.storage.vids)
-        print("\n")
-        print(self.storage.vidsf)
-        print("\n")
-        print("{frame} is the best. maches: {maches}".format(frame=self.storage.vidsf[str(self.storage.count[0])][0], maches=self.storage.count[0]))
-        print(str(str(int(self.storage.vidsf[str(self.storage.count[0])][0]/24/60))+":"+str(int(int(self.storage.vidsf[str(self.storage.count[0])][0]/24)-int(self.storage.vidsf[str(self.storage.count[0])][0]/24/60)*60))))
+        self.storage.debuglogger(ip=self.storage.ip, desc="ID: {movid}".format(movid=self.storage.turl["id"]), code=200)
+        self.storage.debuglogger(ip=self.storage.ip, desc="Take Time: {time}".format(time=str(int(endtime-starttime))), code=200)
+        self.storage.debuglogger(ip=self.storage.ip, desc="\n", code=200)
+        self.storage.debuglogger(ip=self.storage.ip, desc=str(self.storage.vids), code=200)
+        self.storage.debuglogger(ip=self.storage.ip, desc="\n", code=200)
+        self.storage.debuglogger(ip=self.storage.ip, desc=str(self.storage.vidsf), code=200)
+        self.storage.debuglogger(ip=self.storage.ip, desc="\n", code=200)
+        self.storage.debuglogger(ip=self.storage.ip, desc="{frame} is the best. maches: {maches}".format(frame=self.storage.vidsf[str(self.storage.count[0])][0], maches=self.storage.count[0]), code=200)
+        self.storage.debuglogger(ip=self.storage.ip, desc="\n", code=200)
+        self.storage.debuglogger(ip=self.storage.ip, desc=str(str(int(self.storage.vidsf[str(self.storage.count[0])][0]/24/60))+":"+str(int(int(self.storage.vidsf[str(self.storage.count[0])][0]/24)-int(self.storage.vidsf[str(self.storage.count[0])][0]/24/60)*60))), code=200)        
+        self.storage.debuglogger(ip=self.storage.ip, desc="\n\n", code=200)
+
         f = open(self.storage.ytdldata["id"]+".jpg", "rb")
         a = f.read()
         f.close()
-        return {"frame": self.storage.vidsf[str(self.storage.count[0])][0], "maches": self.storage.count[0], "timestamp": int(self.storage.vidsf[str(self.storage.count[0])][0]/24), "timestampMinSec": str(str(int(self.storage.vidsf[str(self.storage.count[0])][0]/24/60))+":"+str(int(int(self.storage.vidsf[str(self.storage.count[0])][0]/24)-int(self.storage.vidsf[str(self.storage.count[0])][0]/24/60)*60))), "youtube-dl-data": self.storage.ytdldata, "thumbnail": str(a)}
+        return {"frame": self.storage.vidsf[str(self.storage.count[0])][0], "maches": self.storage.count[0], "timestamp": int(self.storage.vidsf[str(self.storage.count[0])][0]/24), "timestampMinSec": str(str(int(self.storage.vidsf[str(self.storage.count[0])][0]/24/60))+":"+str(int(int(self.storage.vidsf[str(self.storage.count[0])][0]/24)-int(self.storage.vidsf[str(self.storage.count[0])][0]/24/60)*60))), "youtube-dl-data": self.storage.ytdldata, "thumbnail": a}
 
 
 
