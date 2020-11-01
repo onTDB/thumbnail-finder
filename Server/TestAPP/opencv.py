@@ -87,11 +87,11 @@ class opencv():
                     matchesMask[i]=[1,0]
                     rtn += 1
             
-            if self.storage.debug == True:
-                draw_params = dict(matchColor = (0,255,0), singlePointColor = (255,0,0), matchesMask = matchesMask, flags = 0)
-                img3 = self.cv2.drawMatchesKnn(self.storage.thumbnail,kp1,vidimg,kp2,matches,None,**draw_params)
-                from matplotlib import pyplot as plt
-                plt.imshow(img3,),plt.show()
+            #if self.storage.debug == True:
+            #    draw_params = dict(matchColor = (0,255,0), singlePointColor = (255,0,0), matchesMask = matchesMask, flags = 0)
+            #    img3 = self.cv2.drawMatchesKnn(self.storage.thumbnail,kp1,vidimg,kp2,matches,None,**draw_params)
+            #    from matplotlib import pyplot as plt
+            #    plt.imshow(img3,),plt.show()
 
             storage.vids.update({str(frame): rtn})
             if str(rtn) in storage.vidsf: storage.vidsf[str(rtn)].append(frame)
