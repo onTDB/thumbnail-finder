@@ -177,7 +177,7 @@ class opencv():
 
         self.storage.debuglogger(ip=self.storage.ip, desc="==OpenCV Result==", code=200)
         self.storage.count.sort(reverse=True)
-        self.storage.debuglogger(ip=self.storage.ip, desc="ID: {movid}".format(movid=self.storage.turl["id"]), code=200)
+        self.storage.debuglogger(ip=self.storage.ip, desc="ID: {movid}".format(movid=self.storage.ytdldata["id"]), code=200)
         self.storage.debuglogger(ip=self.storage.ip, desc="Take Time: {time}".format(time=str(int(endtime-starttime))), code=200)
         self.storage.debuglogger(ip=self.storage.ip, desc="\n", code=200)
         self.storage.debuglogger(ip=self.storage.ip, desc=str(self.storage.vids), code=200)
