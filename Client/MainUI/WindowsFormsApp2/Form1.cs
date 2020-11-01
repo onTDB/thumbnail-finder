@@ -18,6 +18,7 @@ namespace WindowsFormsApp2
     //public partial class Form1 : MetroFramework.Forms.MetroForm//디자인 오류나는 것은 public partial class Form1 : Form으로 고치면 가능하긴 한데 멋이 떨어짐
     public partial class Form1 : Form
     {
+        public string imagePath = (Directory.GetCurrentDirectory() + @"images");
         public string path = (Directory.GetCurrentDirectory() + @"\url.txt");
         public bool lisboxChecker = false;
         public string returnURL = null;
@@ -28,12 +29,17 @@ namespace WindowsFormsApp2
         public Form1()
         {
             InitializeComponent();
+            pictureBox1.SizeMode = PictureBoxSizeMode.StretchImage;
             this.FormBorderStyle = FormBorderStyle.FixedSingle;
             this.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             //this.FormBorderStyle = FormBorderStyle.None;
             this.TopMost = true;
             this.Reconnect.Visible = false;
-            returnURL = "https://youtu.be/gdZLi9oWNZg?t=60";
+
+
+            //returnURL = "https://youtu.be/gdZLi9oWNZg?t=60";                          //지워주세요
+
+
             string[] cont = File.ReadAllLines(path);
             foreach(string i in cont)
             {
@@ -41,11 +47,17 @@ namespace WindowsFormsApp2
             }
             if (File.Exists(path))
             {
-                RecordURL();
+                //RecordURL();
             }else
             {
                 File.Create(path);
-                RecordURL();
+                //RecordURL();
+            }
+            if (File.Exists(imagePath))
+            {
+            }else
+            {
+                File.Create(imagePath);
             }
         }
 
@@ -110,6 +122,10 @@ namespace WindowsFormsApp2
             }
             sw.Close();
             listBox1.Items.Add(list["id" + n]);
+            
+
+            //Thumbnail이미지 추가하는 코드 필요
+
 
         }
         public string[] ImportLog()
@@ -292,6 +308,10 @@ namespace WindowsFormsApp2
         {
             lisboxChecker = true;
             button1.Enabled = true;
+
+            //pictureBox1.Image = Image.FromFile((imagePath + listBox1.Items[listBox1.SelectedIndex].ToString() + ".png").ToString());
+            Image newimage = Image.FromFile(@"D:\GitHub\thumbnail-finder\Client\MainUI\WindowsFormsApp2\bin\Debug\images\img1.png");
+            pictureBox1.Image = newimage;
         }
     }
 }
