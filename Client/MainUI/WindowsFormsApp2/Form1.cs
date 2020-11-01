@@ -13,18 +13,18 @@ using System.IO;
 using Newtonsoft.Json.Linq;
 using System.Diagnostics;
 using Microsoft.Win32;
-
 namespace WindowsFormsApp2
 {
-    //public partial class Form1 : MetroFramework.Forms.MetroForm//디자인 오류나는 것은public partial class Form1 : Form으로 고치면 가능하긴 한데 멋이 떨어짐
+    //public partial class Form1 : MetroFramework.Forms.MetroForm//디자인 오류나는 것은 public partial class Form1 : Form으로 고치면 가능하긴 한데 멋이 떨어짐
     public partial class Form1 : Form
     {
+        public string path = (Directory.GetCurrentDirectory() + @"\url.txt");
+        public bool lisboxChecker = false;
         public string returnURL = null;
         public string container = null;
         public static Process process = new Process();
         public JObject rtn1 = JObject.Parse(@"{}");
         public StringBuilder postParams = new StringBuilder();
-
         public Form1()
         {
             InitializeComponent();
@@ -33,20 +33,23 @@ namespace WindowsFormsApp2
             //this.FormBorderStyle = FormBorderStyle.None;
             this.TopMost = true;
             this.Reconnect.Visible = false;
-            string dir = Directory.GetCurrentDirectory() + @"\url.txt";
-            string dir2 = Directory.GetCurrentDirectory() + @"\n.txt";
-            Console.WriteLine(dir2);
-
-            //string n=File.ReadAllText(dir2);
-            //JObject SaveUrl = new JObject(new JProperty(("url"+n).ToString(), "sonhung"));
-            
-            JObject SaveUrl = new JObject(new JProperty(("url").ToString(), "sonhung"));
-            
-            string content = File.ReadAllText(dir);
-            File.WriteAllText(dir, content+"\n"+SaveUrl.ToString()); 
-            Console.WriteLine(content);
-
+            returnURL = "https://youtu.be/gdZLi9oWNZg?t=60";
+            string[] cont = File.ReadAllLines(path);
+            foreach(string i in cont)
+            {
+                listBox1.Items.Add(i);
+            }
+            if (File.Exists(path))
+            {
+                RecordURL();
+            }else
+            {
+                File.Create(path);
+                RecordURL();
+            }
         }
+
+
         public string GetRtn()
         {
             byte[] result = Encoding.UTF8.GetBytes(postParams.ToString());
@@ -54,11 +57,9 @@ namespace WindowsFormsApp2
             wReq.Method = "POST";
             wReq.ContentType = "application/x-www-form-urlencoded";
             wReq.ContentLength = result.Length;
-            Console.WriteLine("2단계 wReq 검사 완료.");
 
             postDataStream = wReq.GetRequestStream();
             postDataStream.Write(result, 0, result.Length);
-            Console.WriteLine("3단계 Write 검사 완료."); //실패됨 아마 서버오류
 
             HttpWebResponse wResp = (HttpWebResponse)wReq.GetResponse();
             Stream respPostStream = wResp.GetResponseStream();
@@ -84,12 +85,46 @@ namespace WindowsFormsApp2
 
             return requestResult1;
         }
+        public void RecordURL()
+        {
+            var list = new JObject();
+
+            string URLcontainer;
+            StreamReader sr = new StreamReader(path);
+            URLcontainer = sr.ReadToEnd();
+
+            int n = File.ReadAllLines(path).Count();
+
+            Console.WriteLine(n);
+            sr.Close();
+            list.Add("id" + n, returnURL);
+            Console.WriteLine(list["id" + n]);
+            StreamWriter sw = new StreamWriter(path);
+            if (n == 0)
+            {
+                sw.Write(URLcontainer + list["id" + n]);
+            }
+            else
+            {
+                sw.Write(URLcontainer + "\n" + list["id" + n]);
+            }
+            sw.Close();
+            listBox1.Items.Add(list["id" + n]);
+
+        }
+        public string[] ImportLog()
+        {
+            
+            string[] rtn = File.ReadAllLines(path);
+
+
+            return rtn;
+        }
         private void button1_Click(object sender, EventArgs e)
         {
-            var p = new { Id = textBox1.Text};         
             try
-            {            
-                if (textBox1.Text != "") 
+            {
+                if (textBox1.Text != "")
                 {
                     if (textBox1.Text.Contains("youtu.be/"))
                     {
@@ -144,7 +179,7 @@ namespace WindowsFormsApp2
                             postDataStream.Close();
                             input.Visible = true;
                         }
-                        catch(Exception ex)
+                        catch (Exception ex)
                         {
                             MessageBox.Show(ex.ToString());
                         }
@@ -153,9 +188,10 @@ namespace WindowsFormsApp2
                             Reconnect.Visible = true;
                             returnURL = container + "?t=" + rtn1["data"]["timestamp"].ToString();
                             JObject SaveUrl = new JObject(new JProperty("url", returnURL));
-                            File.WriteAllText(Directory.GetCurrentDirectory(),SaveUrl.ToString());
+                            File.WriteAllText(Directory.GetCurrentDirectory(), SaveUrl.ToString());
                             process = Process.Start(returnURL);
                             textBox1.Text = null;
+                            RecordURL();
                         }
                     }
                     else if (textBox1.Text.Contains("youtube.com"))
@@ -164,7 +200,7 @@ namespace WindowsFormsApp2
                         input.Visible = false;
                         Console.WriteLine("1단계 clickevent 발생 후 if 검사 완료.");
                         try
-                        {                      
+                        {
                             postParams.Append("?url=" + container);
                             JObject rtn = JObject.Parse(GetRtn());
                             MessageBox.Show("status : " + rtn["status"].ToString());
@@ -173,7 +209,7 @@ namespace WindowsFormsApp2
                                 try
                                 {
                                     while (true)
-                                    {                                       
+                                    {
                                         rtn1 = JObject.Parse(GetRtn1());
 
                                         if (rtn1["status"].ToString() == "200")
@@ -216,6 +252,7 @@ namespace WindowsFormsApp2
                             returnURL = "https://youtu.be/" + container.Substring(container.IndexOf("=") + 1) + "?t=" + rtn1["data"]["timestamp"].ToString();
                             process = Process.Start(returnURL);
                             textBox1.Text = null;
+                            RecordURL();
                         }
 
                     }
@@ -226,6 +263,7 @@ namespace WindowsFormsApp2
             {
                 Console.WriteLine(ex);
             }
+         
         }
 
         private void Reconnect_Click(object sender, EventArgs e)
@@ -236,6 +274,24 @@ namespace WindowsFormsApp2
         }
         public Stream postDataStream;
         public Stream postDataStream1;
-        
+
+        private void button1_Click_1(object sender, EventArgs e)
+        {
+            if (lisboxChecker == true)
+            {
+                textBox1.Text = listBox1.Items[listBox1.SelectedIndex].ToString();
+                process = Process.Start(listBox1.Items[listBox1.SelectedIndex].ToString());
+                button1.Enabled = false;
+            }else
+            {
+                button1.Enabled = false;
+            }
+        }
+
+        private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            lisboxChecker = true;
+            button1.Enabled = true;
+        }
     }
 }
