@@ -18,7 +18,10 @@ namespace WindowsFormsApp2
     //public partial class Form1 : MetroFramework.Forms.MetroForm//디자인 오류나는 것은 public partial class Form1 : Form으로 고치면 가능하긴 한데 멋이 떨어짐
     public partial class Form1 : Form
     {
-        public string imagePath = (Directory.GetCurrentDirectory() + @"images");
+        public string returnTitle = null;
+        public string returnThumbnailurl = null;
+        public string DownImgPath = (Directory.GetCurrentDirectory() + @"\images");
+        public string imagePath = (Directory.GetCurrentDirectory() + @"\images.txt");
         public string path = (Directory.GetCurrentDirectory() + @"\url.txt");
         public bool lisboxChecker = false;
         public string returnURL = null;
@@ -35,11 +38,7 @@ namespace WindowsFormsApp2
             //this.FormBorderStyle = FormBorderStyle.None;
             this.TopMost = true;
             this.Reconnect.Visible = false;
-
-
-            //returnURL = "https://youtu.be/gdZLi9oWNZg?t=60";                          //지워주세요
-
-
+            pictureBox1.ImageLocation = "https://i.ytimg.com/vi_webp/gdZLi9oWNZg/maxresdefault.webp?v=5f3f4882";
             string[] cont = File.ReadAllLines(path);
             foreach(string i in cont)
             {
@@ -47,11 +46,9 @@ namespace WindowsFormsApp2
             }
             if (File.Exists(path))
             {
-                //RecordURL();
             }else
             {
                 File.Create(path);
-                //RecordURL();
             }
             if (File.Exists(imagePath))
             {
@@ -59,6 +56,14 @@ namespace WindowsFormsApp2
             {
                 File.Create(imagePath);
             }
+            if (File.Exists(DownImgPath))
+            {
+            }
+            else
+            {
+                Directory.CreateDirectory(DownImgPath);
+            }
+
         }
 
 
@@ -102,15 +107,19 @@ namespace WindowsFormsApp2
             var list = new JObject();
 
             string URLcontainer;
+            string ThumbnailUrlcontainer;
             StreamReader sr = new StreamReader(path);
             URLcontainer = sr.ReadToEnd();
-
             int n = File.ReadAllLines(path).Count();
-
-            Console.WriteLine(n);
+            sr.Close();
+            sr = new StreamReader(imagePath);
+            ThumbnailUrlcontainer = sr.ReadToEnd();
+            int i = File.ReadAllLines(imagePath).Count();
             sr.Close();
             list.Add("id" + n, returnURL);
-            Console.WriteLine(list["id" + n]);
+            list.Add("thumbnail", returnThumbnailurl);
+            //Console.WriteLine(list["id" + n]);
+            
             StreamWriter sw = new StreamWriter(path);
             if (n == 0)
             {
@@ -121,20 +130,42 @@ namespace WindowsFormsApp2
                 sw.Write(URLcontainer + "\n" + list["id" + n]);
             }
             sw.Close();
+            sw = new StreamWriter(imagePath);
+            if (i == 0)
+            {
+                sw.Write(ThumbnailUrlcontainer + list["thumbnail"]);
+            }
+            else
+            {
+                sw.Write(ThumbnailUrlcontainer + "\n" + list["thumbnail"]);
+            }
+            sw.Close();
             listBox1.Items.Add(list["id" + n]);
-            
 
+            //var thumb = new JObject();
+            //list.Add("thumbnail", "https://i.ytimg.com/vi/U6c3ZMdwX-U/maxresdefault.jpg" );
             //Thumbnail이미지 추가하는 코드 필요
-
-
+            pictureBox1.ImageLocation = returnThumbnailurl;
         }
-        public string[] ImportLog()
+        //public string[] ImportLog()
+        //{
+        //    string[] rtn = File.ReadAllLines(path);
+        //    return rtn;
+        //}
+
+        public void DownImg()
         {
-            
-            string[] rtn = File.ReadAllLines(path);
+            try
+            {
+                WebClient webclient = new WebClient();
+                webclient.DownloadFile(returnThumbnailurl, DownImgPath);
+                //webclient.DownloadFile(returnThumbnailurl, );
 
-
-            return rtn;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
+            }
         }
         private void button1_Click(object sender, EventArgs e)
         {
@@ -173,6 +204,7 @@ namespace WindowsFormsApp2
                                         else if (rtn1["status"].ToString() == "503")
                                         {
                                             System.Threading.Thread.Sleep(5000);
+                                            MessageBox.Show("503");
                                             Console.WriteLine("503");
                                         }
                                         else
@@ -205,8 +237,11 @@ namespace WindowsFormsApp2
                             returnURL = container + "?t=" + rtn1["data"]["timestamp"].ToString();
                             JObject SaveUrl = new JObject(new JProperty("url", returnURL));
                             File.WriteAllText(Directory.GetCurrentDirectory(), SaveUrl.ToString());
+                            returnThumbnailurl = (rtn1["data"]["videodata"]["thumbnailurl"]).ToString();
+                            returnTitle = (rtn1["data"]["videodata"]["thumbnailurl"]).ToString();
                             process = Process.Start(returnURL);
                             textBox1.Text = null;
+                            DownImg();
                             RecordURL();
                         }
                     }
@@ -266,8 +301,11 @@ namespace WindowsFormsApp2
                         {
                             Reconnect.Visible = true;
                             returnURL = "https://youtu.be/" + container.Substring(container.IndexOf("=") + 1) + "?t=" + rtn1["data"]["timestamp"].ToString();
+                            returnThumbnailurl = (rtn1["data"]["videodata"]["thumbnailurl"]).ToString();
+                            returnTitle = (rtn1["data"]["videodata"]["thumbnailurl"]).ToString();
                             process = Process.Start(returnURL);
                             textBox1.Text = null;
+                            DownImg();
                             RecordURL();
                         }
 
@@ -285,7 +323,8 @@ namespace WindowsFormsApp2
         private void Reconnect_Click(object sender, EventArgs e)
         {
             MessageBox.Show("연결을 재설정 합니다...\nPress Enter");
-            process = Process.Start(returnURL);
+
+            //process = Process.Start(returnURL);
 
         }
         public Stream postDataStream;
@@ -308,10 +347,14 @@ namespace WindowsFormsApp2
         {
             lisboxChecker = true;
             button1.Enabled = true;
-
-            //pictureBox1.Image = Image.FromFile((imagePath + listBox1.Items[listBox1.SelectedIndex].ToString() + ".png").ToString());
-            Image newimage = Image.FromFile(@"D:\GitHub\thumbnail-finder\Client\MainUI\WindowsFormsApp2\bin\Debug\images\img1.png");
-            pictureBox1.Image = newimage;
+            Console.WriteLine(listBox1.SelectedIndex);
+            string[] img = File.ReadAllLines(imagePath);
+            int i = File.ReadAllLines(imagePath).Count();
+            Console.WriteLine(i);
+            Console.WriteLine(img[listBox1.SelectedIndex].ToString());
+            
+            pictureBox1.ImageLocation = img[listBox1.SelectedIndex].ToString();
+            pictureBox1.ImageLocation = "https://i.ytimg.com/vi_webp/gdZLi9oWNZg/maxresdefault.webp?v=5f3f4882";
         }
     }
 }
