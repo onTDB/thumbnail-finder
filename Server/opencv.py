@@ -41,7 +41,7 @@ class storage():
         import time
         if self.debug == True: print("{ip} - - {time} || DEBUG || {desc} {code} -".format(ip=ip, desc=desc, time=time.strftime('[%Y/%m/%d %H:%M:%S] ', time.localtime(time.time())), code=str(code)))
         pass
-        
+
 
 class opencv():
     def __init__(self, storage):
@@ -152,9 +152,9 @@ class opencv():
 
 
             if (int(vc.get(1)) % self.storage.fps == 0): 
-                self.storage.debuglogger(ip=self.storage.ip, desc="===== FPS INFO =====", code=200)
-                self.storage.debuglogger(ip=self.storage.ip, desc="VideoFPS: "+str(self.storage.fps), code=200)
-                self.storage.debuglogger(ip=self.storage.ip, desc="NowFps: "+str(int(vc.get(1))), code=200)
+                #self.storage.debuglogger(ip=self.storage.ip, desc="===== FPS INFO =====", code=200)
+                #self.storage.debuglogger(ip=self.storage.ip, desc="VideoFPS: "+str(self.storage.fps), code=200)
+                #elf.storage.debuglogger(ip=self.storage.ip, desc="NowFps: "+str(int(vc.get(1))), code=200)
                 #print("Nowfps: "+str(vc.get(1)))
                 tmp = Thread(target=self.core, args=(self.storage, img, vc.get(1),))
                 tmp.start()
@@ -163,7 +163,7 @@ class opencv():
                 #self.storage.debuglogger(ip=self.storage.ip, desc="Stauts: True", code=200)
             #else:
                 #self.storage.debuglogger(ip=self.storage.ip, desc="Stauts: False", code=200)
-            self.storage.debuglogger(ip=self.storage.ip, desc="====================", code=200)
+            #self.storage.debuglogger(ip=self.storage.ip, desc="====================", code=200)
 
             if int(vc.get(1)) == int(vc.get(self.cv2.CAP_PROP_FRAME_COUNT)): break
 
