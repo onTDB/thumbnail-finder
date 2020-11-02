@@ -8,7 +8,7 @@ class Storage(Exception):
         self.logging.basicConfig(filename='debug.log', level=logging.DEBUG)
         self.storage = self
         self.server = server(self)
-        self.debug = False
+        self.debug = True
         self.cv2 = cv2
         self.sift = cv2.xfeatures2d.SIFT_create()
         self.ytdl = ytdl(self)
