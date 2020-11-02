@@ -59,15 +59,16 @@ class ytdl(Exception):
         #f.close()
         self.storage.debuglogger(ip=ip, desc="Start to download video", code=200)
         from os import system
-        try:
-            system("youtube-dl --no-warnings -f 134 -o %(id)s.%(ext)s {url}".format(url="https://youtu.be/"+yturl))
-        except:
-            self.storage.logger(ip=ip, desc="Error to Download Video.", code=503)
-            raise ChildProcessError
-        
         from os.path import isfile
-        if isfile(yturl+".mp4"): pass
-        else: system("youtube-dl --no-warnings -f 134 -o %(id)s.%(ext)s {url}".format(url="https://youtu.be/"+yturl))
+        while True:
+            try:
+                system("youtube-dl --no-warnings -f 134 -o %(id)s.%(ext)s {url}".format(url="https://youtu.be/"+yturl))
+            except:
+                self.storage.logger(ip=ip, desc="Error to Download Video.", code=503)
+                raise ChildProcessError
+            
+            if isfile(yturl+".mp4"): break
+            else: pass
 
         self.storage.debuglogger(ip=ip, desc="Download video command execute OK", code=200)
 
