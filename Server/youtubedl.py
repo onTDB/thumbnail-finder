@@ -8,30 +8,36 @@ class ytdl(Exception):
     def download(self, yturl, ip):
         import youtube_dl
         self.storage.debuglogger(ip=ip, desc="Import youtube_dl OK", code=200)
-        try:
-            self.storage.debuglogger(ip=ip, desc="Start to get video info", code=200)
-            turl = youtube_dl.YoutubeDL({}).extract_info("https://youtu.be/"+yturl, download=False)
-        except youtube_dl.utils.DownloadError:
+        #try:
+        #    self.storage.debuglogger(ip=ip, desc="Start to get video info", code=200)
+        #    turl = youtube_dl.YoutubeDL({}).extract_info("https://youtu.be/"+yturl, download=False)
+        #except youtube_dl.utils.DownloadError:
+        #    try:
+        #        from time import sleep
+        #        sleep(1)
+        #        self.storage.debuglogger(ip=ip, desc="Start to get video info Retry", code=200)
+        #        turl = youtube_dl.YoutubeDL({}).extract_info("https://youtu.be/"+yturl, download=False)
+        #    except:
+        #        self.storage.logger(ip=ip, desc="Error to Download Thumbnail", code=503)
+        #        raise IndexError
+        #except youtube_dl.utils.RegexNotFoundError:
+        #    try:
+        #        from time import sleep
+        #        sleep(1)
+        #        self.storage.debuglogger(ip=ip, desc="Start to get video info Retry", code=200)
+        #        turl = youtube_dl.YoutubeDL({}).extract_info("https://youtu.be/"+yturl, download=False)
+        #    except:
+        #        self.storage.logger(ip=ip, desc="Error to Download Thumbnail", code=503)
+        #        raise IndexError
+        #except:
+        #    self.storage.logger(ip=ip, desc="Something Went Wrong!! youtubedl.py::29", code=503)
+        #    raise SyntaxError
+        while True:
             try:
-                from time import sleep
-                sleep(1)
-                self.storage.debuglogger(ip=ip, desc="Start to get video info Retry", code=200)
                 turl = youtube_dl.YoutubeDL({}).extract_info("https://youtu.be/"+yturl, download=False)
+                break
             except:
-                self.storage.logger(ip=ip, desc="Error to Download Thumbnail", code=503)
-                raise IndexError
-        except youtube_dl.utils.RegexNotFoundError:
-            try:
-                from time import sleep
-                sleep(1)
-                self.storage.debuglogger(ip=ip, desc="Start to get video info Retry", code=200)
-                turl = youtube_dl.YoutubeDL({}).extract_info("https://youtu.be/"+yturl, download=False)
-            except:
-                self.storage.logger(ip=ip, desc="Error to Download Thumbnail", code=503)
-                raise IndexError
-        except:
-            self.storage.logger(ip=ip, desc="Something Went Wrong!! youtubedl.py::29", code=503)
-            raise SyntaxError
+                pass
         self.storage.debuglogger(ip=ip, desc="Get video info OK", code=200)
 
         print("\n\n")
@@ -57,9 +63,9 @@ class ytdl(Exception):
         #f = open(yturl+".mp4", "wb")
         #f.write(get(data["url"]).content)
         #f.close()
-        self.storage.debuglogger(ip=ip, desc="Start to download video", code=200)
         from os import system
         from os.path import isfile
+        self.storage.debuglogger(ip=ip, desc="Start to download video", code=200)
         while True:
             try:
                 system("youtube-dl --no-warnings -f 134 -o %(id)s.%(ext)s {url}".format(url="https://youtu.be/"+yturl))
