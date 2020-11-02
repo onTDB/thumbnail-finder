@@ -4,6 +4,7 @@ class Storage(Exception):
         from youtubedl import ytdl
         import logging
         import cv2
+        self.logging = logging
         self.logging.basicConfig(filename='debug.log', level=logging.DEBUG)
         self.storage = self
         self.server = server(self)
