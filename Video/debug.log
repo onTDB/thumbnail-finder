@@ -1330,7 +1330,6 @@ DEBUG:root:127.0.0.1 - - [2020/11/03 02:28:38]  || OPENCV || 5064.0 || FlannBase
 DEBUG:root:127.0.0.1 - - [2020/11/03 02:28:38]  || OPENCV || 5112.0 || Append match: 0 200 -
 DEBUG:root:127.0.0.1 - - [2020/11/03 02:28:38]  || OPENCV || 5184.0 || Load all images 200 -
 DEBUG:root:127.0.0.1 - - [2020/11/03 02:28:38]  || OPENCV || 5184.0 || FlannBasedMatcher OK 200 -
-DEBUG:root:127.0.0.1 - - [2020/11/03 02:28:38]  || OPENCV || 5232.0 || Entry Of OpenCV Core::5232 200 -
 DEBUG:root:127.0.0.1 - - [2020/11/03 02:28:38]  || OPENCV || 5040.0 || Match Check OK 200 -
 DEBUG:root:127.0.0.1 - - [2020/11/03 02:28:38]  || OPENCV || 4872.0 || Match Check OK 200 -
 DEBUG:root:127.0.0.1 - - [2020/11/03 02:28:38]  || OPENCV || 4944.0 || Match Check OK 200 -
@@ -1373,8 +1372,6 @@ DEBUG:root:127.0.0.1 - - [2020/11/03 02:28:39]  || OPENCV || 5208.0 || Append ma
 DEBUG:root:127.0.0.1 - - [2020/11/03 02:28:39]  || OPENCV || 5136.0 || MatchTask OK 200 -
 DEBUG:root:127.0.0.1 - - [2020/11/03 02:28:39]  || OPENCV || 5136.0 || Append match: 0 200 -
 DEBUG:root:127.0.0.1 - - [2020/11/03 02:28:39]  || OPENCV || 5352.0 || Entry Of OpenCV Core::5352 200 -
-DEBUG:root:127.0.0.1 - - [2020/11/03 02:28:39]  || OPENCV || 5232.0 || Load all images 200 -
-DEBUG:root:127.0.0.1 - - [2020/11/03 02:28:39]  || OPENCV || 5232.0 || FlannBasedMatcher OK 200 -
 DEBUG:root:127.0.0.1 - - [2020/11/03 02:28:39]  || OPENCV || 5256.0 || Load all images 200 -
 DEBUG:root:127.0.0.1 - - [2020/11/03 02:28:39]  || OPENCV || 5256.0 || FlannBasedMatcher OK 200 -
 DEBUG:root:127.0.0.1 - - [2020/11/03 02:28:39]  || OPENCV || 5304.0 || Load all images 200 -
@@ -1392,6 +1389,10 @@ DEBUG:root:127.0.0.1 - - [2020/11/03 02:28:39]  || OPENCV || 5328.0 || Match Che
 DEBUG:root:127.0.0.1 - - [2020/11/03 02:28:39]  || OPENCV || 5328.0 || MatchTask OK 200 -
 DEBUG:root:127.0.0.1 - - [2020/11/03 02:28:39]  || OPENCV || 5328.0 || Matching 1 200 -
 DEBUG:root:127.0.0.1 - - [2020/11/03 02:28:39]  || OPENCV || 5328.0 || Append match: 1 200 -
+
+DEBUG:root:127.0.0.1 - - [2020/11/03 02:28:38]  || OPENCV || 5232.0 || Entry Of OpenCV Core::5232 200 -
+DEBUG:root:127.0.0.1 - - [2020/11/03 02:28:39]  || OPENCV || 5232.0 || Load all images 200 -
+DEBUG:root:127.0.0.1 - - [2020/11/03 02:28:39]  || OPENCV || 5232.0 || FlannBasedMatcher OK 200 -
 DEBUG:root:127.0.0.1 - - [2020/11/03 02:28:39]  || OPENCV || 5232.0 || Match Check OK 200 -
 DEBUG:root:127.0.0.1 - - [2020/11/03 02:28:39]  || OPENCV || 5232.0 || MatchTask OK 200 -
 DEBUG:root:127.0.0.1 - - [2020/11/03 02:28:39]  || OPENCV || 5232.0 || Matching 1 200 -
@@ -1408,8 +1409,9 @@ DEBUG:root:127.0.0.1 - - [2020/11/03 02:28:39]  || OPENCV || 5232.0 || Matching 
 DEBUG:root:127.0.0.1 - - [2020/11/03 02:28:39]  || OPENCV || 5232.0 || Matching 12 200 -
 DEBUG:root:127.0.0.1 - - [2020/11/03 02:28:39]  || OPENCV || 5232.0 || Matching 13 200 -
 DEBUG:root:127.0.0.1 - - [2020/11/03 02:28:39]  || OPENCV || 5232.0 || Matching 14 200 -
-DEBUG:root:127.0.0.1 - - [2020/11/03 02:28:39]  || OPENCV || 5280.0 || Match Check OK 200 -
 DEBUG:root:127.0.0.1 - - [2020/11/03 02:28:39]  || OPENCV || 5232.0 || Append match: 14 200 -
+
+DEBUG:root:127.0.0.1 - - [2020/11/03 02:28:39]  || OPENCV || 5280.0 || Match Check OK 200 -
 DEBUG:root:127.0.0.1 - - [2020/11/03 02:28:39]  || OPENCV || 5280.0 || MatchTask OK 200 -
 DEBUG:root:127.0.0.1 - - [2020/11/03 02:28:39]  || OPENCV || 5280.0 || Matching 1 200 -
 DEBUG:root:127.0.0.1 - - [2020/11/03 02:28:39]  || OPENCV || 5280.0 || Matching 2 200 -
