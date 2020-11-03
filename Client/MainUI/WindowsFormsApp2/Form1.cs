@@ -63,7 +63,6 @@ namespace WindowsFormsApp2
             {
                 Directory.CreateDirectory(DownImgPath);
             }
-
         }
 
 
@@ -233,15 +232,15 @@ namespace WindowsFormsApp2
                         }
                         finally
                         {
+                            process = Process.Start(returnURL);
                             Reconnect.Visible = true;
                             returnURL = container + "?t=" + rtn1["data"]["timestamp"].ToString();
                             JObject SaveUrl = new JObject(new JProperty("url", returnURL));
                             File.WriteAllText(Directory.GetCurrentDirectory(), SaveUrl.ToString());
                             returnThumbnailurl = (rtn1["data"]["videodata"]["thumbnailurl"]).ToString();
                             returnTitle = (rtn1["data"]["videodata"]["thumbnailurl"]).ToString();
-                            process = Process.Start(returnURL);
                             textBox1.Text = null;
-                            DownImg();
+                            //DownImg();
                             RecordURL();
                         }
                     }
@@ -279,7 +278,6 @@ namespace WindowsFormsApp2
                                             break;
                                         }
                                     }
-
                                 }
                                 catch (Exception ex)
                                 {
@@ -299,16 +297,15 @@ namespace WindowsFormsApp2
                         }
                         finally
                         {
+                            process = Process.Start(returnURL);
                             Reconnect.Visible = true;
                             returnURL = "https://youtu.be/" + container.Substring(container.IndexOf("=") + 1) + "?t=" + rtn1["data"]["timestamp"].ToString();
                             returnThumbnailurl = (rtn1["data"]["videodata"]["thumbnailurl"]).ToString();
                             returnTitle = (rtn1["data"]["videodata"]["thumbnailurl"]).ToString();
-                            process = Process.Start(returnURL);
                             textBox1.Text = null;
-                            DownImg();
+                            //DownImg();
                             RecordURL();
                         }
-
                     }
                 }
                 else Console.WriteLine("textbox1 == null");
@@ -322,8 +319,10 @@ namespace WindowsFormsApp2
 
         private void Reconnect_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("연결을 재설정 합니다...\nPress Enter");
-
+            button1.Visible = true;
+            object sender1 = button1;
+            EventArgs e1 = new EventArgs();
+            button1_Click(sender1, e1);
             //process = Process.Start(returnURL);
 
         }
@@ -348,13 +347,13 @@ namespace WindowsFormsApp2
             lisboxChecker = true;
             button1.Enabled = true;
             Console.WriteLine(listBox1.SelectedIndex);
-            string[] img = File.ReadAllLines(imagePath);
-            int i = File.ReadAllLines(imagePath).Count();
-            Console.WriteLine(i);
-            Console.WriteLine(img[listBox1.SelectedIndex].ToString());
+            //string[] img = File.ReadAllLines(imagePath);
+            //int i = File.ReadAllLines(imagePath).Count();
+            //Console.WriteLine(i);
+            //Console.WriteLine(img[listBox1.SelectedIndex].ToString());
             
-            pictureBox1.ImageLocation = img[listBox1.SelectedIndex].ToString();
-            pictureBox1.ImageLocation = "https://i.ytimg.com/vi_webp/gdZLi9oWNZg/maxresdefault.webp?v=5f3f4882";
+            //pictureBox1.ImageLocation = img[listBox1.SelectedIndex].ToString();
+            //pictureBox1.ImageLocation = "https://i.ytimg.com/vi_webp/gdZLi9oWNZg/maxresdefault.webp?v=5f3f4882";
         }
     }
 }
