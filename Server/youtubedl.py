@@ -72,7 +72,7 @@ class ytdl(Exception):
         self.storage.debuglogger(ip=ip, desc="Start to download video", code=200)
         while True:
             try:
-                system("youtube-dl --no-warnings -f {formatid} -o %(id)s.%(ext)s {url}".format(url="https://youtu.be/"+url, formatid=data["format_id"]))
+                system("youtube-dl --no-warnings -f {formatid} -o %(id)s.%(ext)s {url}".format(url=url, formatid=data["format_id"]))
             except:
                 self.storage.logger(ip=ip, desc="Error to Download Video.", code=503)
                 raise ChildProcessError
@@ -94,6 +94,7 @@ class ytdl(Exception):
     def checkurl(self, url, ip):
         import youtube_dl
         
+        print(url)
         while True:
             try:
                 turl = youtube_dl.YoutubeDL({}).extract_info(url, download=False)
