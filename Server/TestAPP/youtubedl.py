@@ -5,7 +5,7 @@ class ytdl(Exception):
     def __init__(self, storage):
         self.storage = storage
     
-    def download(self, yturl, ip):
+    def download(self, url, ip, turl=None):
         import youtube_dl
         self.storage.debuglogger(ip=ip, desc="Import youtube_dl OK", code=200)
         #try:
@@ -32,74 +32,94 @@ class ytdl(Exception):
         #except:
         #    self.storage.logger(ip=ip, desc="Something Went Wrong!! youtubedl.py::29", code=503)
         #    raise SyntaxError
-        while True:
-            try:
-                turl = youtube_dl.YoutubeDL({}).extract_info("https://youtu.be/"+yturl, download=False)
-                break
-            except:
-                pass
+        if turl == None:
+            while True:
+                try:
+                    turl = youtube_dl.YoutubeDL({}).extract_info(url, download=False)
+                    break
+                except youtube_dl.utils.DownloadError:
+                    return 0, 0
+                except:
+                    pass
         self.storage.debuglogger(ip=ip, desc="Get video info OK", code=200)
 
         print("\n\n")
         print(turl)
 
-        fps = self.movie(yturl, turl, ip)
-        self.thumbnail(yturl, turl, ip)
+        fps = self.movie(url, turl, ip)
+        self.thumbnail(url, turl, ip)
         return fps, turl
     
-    def movie(self, yturl, turl, ip):
+    def movie(self, url, turl, ip):
         #from requests import get
         #data = None
-        self.storage.debuglogger(ip=ip, desc="Parse FPS Start", code=200)
-        for i in turl["formats"]:
-            if i["format_id"] == '134':
-                data = i
-                break
-        
-        self.storage.debuglogger(ip=ip, desc="Parse FPS OK", code=200)
+        #self.storage.debuglogger(ip=ip, desc="Parse FPS Start", code=200)
+        #for i in turl["formats"]:
+        #    if i["format_id"] == '134':
+        #        data = i
+        #        break
+        #
+        #self.storage.debuglogger(ip=ip, desc="Parse FPS OK", code=200)
+
+        data = turl[len(turl["formats"])-1]
+        if "fps" in data:
+            fps = data["fps"]
+        else:
+            fps = None
         
         
         #if data == None: raise SyntaxError
         #f = open(yturl+".mp4", "wb")
         #f.write(get(data["url"]).content)
         #f.close()
-        self.storage.debuglogger(ip=ip, desc="Start to download video", code=200)
         from os import system
-        try:
-            system("youtube-dl --no-warnings -f 134 -o %(id)s.%(ext)s {url}".format(url="https://youtu.be/"+yturl))
-        except:
-            self.storage.logger(ip=ip, desc="Error to Download Video.", code=503)
-            raise ChildProcessError
-        
         from os.path import isfile
-        if isfile(yturl+".mp4"): pass
-        else: system("youtube-dl --no-warnings -f 134 -o %(id)s.%(ext)s {url}".format(url="https://youtu.be/"+yturl))
+        self.storage.debuglogger(ip=ip, desc="Start to download video", code=200)
+        while True:
+            try:
+                system("youtube-dl --no-warnings -f {formatid} -o %(id)s.%(ext)s {url}".format(url="https://youtu.be/"+url, formatid=data["format_id"]))
+            except:
+                self.storage.logger(ip=ip, desc="Error to Download Video.", code=503)
+                raise ChildProcessError
+            
+            if isfile(turl["id"]+".mp4"): break
+            else: pass
 
         self.storage.debuglogger(ip=ip, desc="Download video command execute OK", code=200)
 
-        return data["fps"]
+        return fps
 
     
-    def thumbnail(self, yturl, turl, ip):
+    def thumbnail(self, url, turl, ip):
         from requests import get
-        f = open(yturl+".jpg", "wb")
+        f = open(turl["id"]+".jpg", "wb")
         f.write(get(turl["thumbnails"][int(len(turl["thumbnails"]))-1]["url"]).content)
         f.close()
     
     def checkurl(self, url, ip):
-        from parse import parse
-        if "www.youtube.com" in url: 
-            if "&list" in url: videoid = parse("{}v={id}&list{}", url)["id"]
-            elif "&feature" in url: videoid = parse("{}v={id}&feature{}", url)["id"]
-            elif "&t" in url: videoid = parse("{}v={id}&t{}", url)["id"]
-            else: videoid = parse("{}v={id}", url)["id"]
-        elif "youtu.be" in url:
-            if "&list" in url: videoid = parse("{}youtu.be/{id}?list{}", url)["id"]
-            elif "&feature" in url: videoid = parse("{}v={id}&feature{}", url)["id"]
-            elif "&t" in url: videoid = parse("{}youtu.be/{id}?t{}", url)["id"]
-            else: videoid = parse("{}youtu.be/{id}", url)["id"]
-        else: 
-            self.storage.logger(ip=ip, desc="Syntax Error. This is not a youtube url", code=400)
-            raise SyntaxError
+        import youtube_dl
+        while True:
+            try:
+                turl = youtube_dl.YoutubeDL({}).extract_info(url, download=False)
+                return turl["id"], turl
+            except youtube_dl.utils.DownloadError:
+                raise SyntaxError
+            except:
+                pass
+        
+        #from parse import parse
+        #if "www.youtube.com" in url: 
+        #    if "&list" in url: videoid = parse("{}v={id}&list{}", url)["id"]
+        #    elif "&feature" in url: videoid = parse("{}v={id}&feature{}", url)["id"]
+        #    elif "&t" in url: videoid = parse("{}v={id}&t{}", url)["id"]
+        #    else: videoid = parse("{}v={id}", url)["id"]
+        #elif "youtu.be" in url:
+        #    if "&list" in url: videoid = parse("{}youtu.be/{id}?list{}", url)["id"]
+        #    elif "&feature" in url: videoid = parse("{}v={id}&feature{}", url)["id"]
+        #    elif "&t" in url: videoid = parse("{}youtu.be/{id}?t{}", url)["id"]
+        #    else: videoid = parse("{}youtu.be/{id}", url)["id"]
+        #else: 
+        #    self.storage.logger(ip=ip, desc="Syntax Error. This is not a youtube url", code=400)
+        #    raise SyntaxError
 
-        return videoid
+        #return videoid

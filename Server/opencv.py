@@ -192,7 +192,7 @@ class opencv():
         f = open(self.storage.ytdldata["id"]+".jpg", "rb")
         a = f.read()
         f.close()
-        return {"frame": self.storage.vidsf[str(self.storage.count[0])][0], "maches": self.storage.count[0], "timestamp": int(self.storage.vidsf[str(self.storage.count[0])][0]/24), "timestampMinSec": str(str(int(self.storage.vidsf[str(self.storage.count[0])][0]/24/60))+":"+str(int(int(self.storage.vidsf[str(self.storage.count[0])][0]/24)-int(self.storage.vidsf[str(self.storage.count[0])][0]/24/60)*60))), "youtube-dl-data": self.storage.ytdldata, "thumbnail": a}
+        return {"frame": self.storage.vidsf[str(self.storage.count[0])][0], "maches": self.storage.count[0], "timestamp": int(self.storage.vidsf[str(self.storage.count[0])][0]/self.storage.fps), "timestampMinSec": str(str(int(self.storage.vidsf[str(self.storage.count[0])][0]/self.storage.fps/60))+":"+str(int(int(self.storage.vidsf[str(self.storage.count[0])][0]/self.storage.fps)-int(self.storage.vidsf[str(self.storage.count[0])][0]/self.storage.fps/60)*60))), "youtube-dl-data": self.storage.ytdldata}
 
 
 

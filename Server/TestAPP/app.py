@@ -2,10 +2,13 @@
 class Storage(Exception):
     def __init__(self):
         from youtubedl import ytdl
+        import logging
         import cv2
+        self.logging = logging
+        self.logging.basicConfig(filename='debug.log', level=logging.DEBUG)
         self.storage = self
         self.server = server(self)
-        self.debug = False
+        self.debug = True
         self.cv2 = cv2
         self.sift = cv2.xfeatures2d.SIFT_create()
         self.ytdl = ytdl(self)
@@ -48,14 +51,30 @@ class Storage(Exception):
         import time
         #time.strftime('[%Y/%m/%d %H:%M:%S] ', time.localtime(time.time()))
         print("{ip} - - {time} {desc} {code} -".format(ip=ip, desc=desc, time=time.strftime('[%Y/%m/%d %H:%M:%S] ', time.localtime(time.time())), code=str(code)))
+        if self.debug == True:
+            self.logsave(desc="{ip} - - {time} {desc} {code} -".format(ip=ip, desc=desc, time=time.strftime('[%Y/%m/%d %H:%M:%S] ', time.localtime(time.time())), code=str(code)), code=code)
         pass
 
     def debuglogger(self, ip, desc, code, frame=None):
         import time
         if self.debug == True: 
-            if frame == None: print("{ip} - - {time} || DEBUG || {desc} {code} -".format(ip=ip, desc=desc, time=time.strftime('[%Y/%m/%d %H:%M:%S] ', time.localtime(time.time())), code=str(code)))
-            else: print("{ip} - - {time} || DEBUG || OPENCV || {frame} || {desc} {code} -".format(ip=ip, desc=desc, time=time.strftime('[%Y/%m/%d %H:%M:%S] ', time.localtime(time.time())), code=str(code), frame=frame))
+            if frame == None: 
+                print("{ip} - - {time} || DEBUG || {desc} {code} -".format(ip=ip, desc=desc, time=time.strftime('[%Y/%m/%d %H:%M:%S] ', time.localtime(time.time())), code=str(code)))
+                self.logsave(desc="{ip} - - {time} {desc} {code} -".format(ip=ip, desc=desc, time=time.strftime('[%Y/%m/%d %H:%M:%S] ', time.localtime(time.time())), code=str(code)), code=code)
+            else: 
+                print("{ip} - - {time} || DEBUG || OPENCV || {frame} || {desc} {code} -".format(ip=ip, desc=desc, time=time.strftime('[%Y/%m/%d %H:%M:%S] ', time.localtime(time.time())), code=str(code), frame=frame))
+                self.logsave(desc="{ip} - - {time} || OPENCV || {frame} || {desc} {code} -".format(ip=ip, desc=desc, time=time.strftime('[%Y/%m/%d %H:%M:%S] ', time.localtime(time.time())), code=str(code), frame=frame), code=code, frame=frame)
+
         pass
+
+    def logsave(self, desc, code, frame=None):
+        #from os import system
+        #system('echo "{desc}" >> debug.log'.format(desc=desc))
+        if frame != None: self.logging.debug(desc)
+        elif code == 200: self.logging.info(desc)
+        elif code == 400: self.logging.warning(desc)
+        elif code == 503: self.logging.error(desc)
+        else: self.logging.debug(desc)
 
 
 class server(Exception):
@@ -80,8 +99,8 @@ class server(Exception):
         storage.now.remove(movid)
 
     def processstarter(self, param, ip):
-        try: movid = self.storage.ytdl.checkurl(param, ip)
-        except SyntaxError: return {"status": 400, "line": "Syntax Error. This is not a youtube url"}
+        try: movid, turl = self.storage.ytdl.checkurl(param, ip)
+        except SyntaxError: return {"status": 400, "line": "Syntax Error. This is not a valid url"}
         self.storage.debuglogger(ip=ip, desc="Youtube URL Checker OK", code=200)
         
         # Check
@@ -97,7 +116,7 @@ class server(Exception):
         # Download Start
 
         self.storage.debuglogger(ip=ip, desc="Download Start", code=200)
-        try: fps, turl = self.storage.ytdl.download(movid, ip)
+        try: fps, turl = self.storage.ytdl.download(movid, ip, turl)
 
         except: return {"status": 503, "line": "Cannot download Video. Retry again."}
         
@@ -120,10 +139,10 @@ class server(Exception):
 
     def movtimestampsearch(self, param, ip):
         try:
-            movid = self.storage.ytdl.checkurl(param, ip)
+            movid, turl = self.storage.ytdl.checkurl(param, ip)
         except SyntaxError:
-            self.storage.debuglogger(ip=ip, desc="Syntax Error. This is not a youtube url", code=400)
-            return {"status": 400, "line": "Syntax Error. This is not a youtube url"}
+            self.storage.debuglogger(ip=ip, desc="Syntax Error. This is not a valid url", code=400)
+            return {"status": 400, "line": "Syntax Error. This is not a valid url"}
         
         if movid in self.storage.now:
             self.storage.debuglogger(ip=ip, desc="Service Unavailable. This movie is now analyzing. Please try again.", code=500)
