@@ -8,7 +8,7 @@ class Storage(Exception):
         self.logging.basicConfig(filename='debug.log', level=logging.DEBUG)
         self.storage = self
         self.server = server(self)
-        self.debug = True
+        self.debug = False
         self.cv2 = cv2
         self.sift = cv2.xfeatures2d.SIFT_create()
         self.ytdl = ytdl(self)
@@ -116,7 +116,7 @@ class server(Exception):
         # Download Start
 
         self.storage.debuglogger(ip=ip, desc="Download Start", code=200)
-        try: fps, turl = self.storage.ytdl.download(movid, ip, turl)
+        try: fps, turl = self.storage.ytdl.download(param, ip, turl)
 
         except: return {"status": 503, "line": "Cannot download Video. Retry again."}
         

@@ -4,13 +4,13 @@ class cvstorage():
         self.ytdldata = turl
         self.ip = ip
         self.fps = fps
+        self.realfps = fps
         self.count = []
         self.mainstorage = sto
         self.thumbnailpath = thumbnailpath
         self.vidpath = vidpath
         self.thumbnail = None
         self.opencv = opencv(self)
-        self.debug = self.mainstorage.debug
         self.logger = self.mainstorage.logger
         self.debuglogger = self.mainstorage.debuglogger
 
@@ -116,6 +116,13 @@ class opencv():
         self.storage.vids = {}
         self.storage.vidsf = {}
         threads = []
+        if self.storage.fps == None: 
+            self.storage.fps = int(vc.get(self.cv2.CAP_PROP_FPS))
+            if (vc.get(self.cv2.CAP_PROP_FPS) % 1 == 0):
+                self.storage.realfps = vc.get(self.cv2.CAP_PROP_FPS)
+            else:
+                self.storage.realfps = int(vc.get(self.cv2.CAP_PROP_FPS))+1
+
 
 
         self.storage.debuglogger(ip=self.storage.ip, desc="Clear methods OK", code=200)
@@ -151,7 +158,7 @@ class opencv():
             #self.storage.debuglogger(ip=self.storage.ip, desc="NowFps: "+str(int(vc.get(1))), code=200)
 
 
-            if (int(vc.get(1)) % self.storage.fps == 0): 
+            if (int(vc.get(1)) % int(self.storage.fps/3) == 0): 
                 #self.storage.debuglogger(ip=self.storage.ip, desc="===== FPS INFO =====", code=200)
                 #self.storage.debuglogger(ip=self.storage.ip, desc="VideoFPS: "+str(self.storage.fps), code=200)
                 #elf.storage.debuglogger(ip=self.storage.ip, desc="NowFps: "+str(int(vc.get(1))), code=200)
@@ -192,7 +199,7 @@ class opencv():
         f = open(self.storage.ytdldata["id"]+".jpg", "rb")
         a = f.read()
         f.close()
-        return {"frame": self.storage.vidsf[str(self.storage.count[0])][0], "maches": self.storage.count[0], "timestamp": int(self.storage.vidsf[str(self.storage.count[0])][0]/self.storage.fps), "timestampMinSec": str(str(int(self.storage.vidsf[str(self.storage.count[0])][0]/self.storage.fps/60))+":"+str(int(int(self.storage.vidsf[str(self.storage.count[0])][0]/self.storage.fps)-int(self.storage.vidsf[str(self.storage.count[0])][0]/self.storage.fps/60)*60))), "youtube-dl-data": self.storage.ytdldata}
+        return {"frame": self.storage.vidsf[str(self.storage.count[0])][0], "maches": self.storage.count[0], "timestamp": int(self.storage.vidsf[str(self.storage.count[0])][0]/self.storage.realfps)-1, "timestampMinSec": str(str(int(self.storage.vidsf[str(self.storage.count[0])][0]/self.storage.realfps/60))+":"+str(int(int(self.storage.vidsf[str(self.storage.count[0])][0]/self.storage.realfps)-int(self.storage.vidsf[str(self.storage.count[0])][0]/self.storage.fps/60)*60))), "youtube-dl-data": self.storage.ytdldata}
 
 
 

@@ -70,6 +70,8 @@ class ytdl(Exception):
         from os import system
         from os.path import isfile
         self.storage.debuglogger(ip=ip, desc="Start to download video", code=200)
+        #print("youtube-dl --no-warnings -f {formatid} -o %(id)s.%(ext)s {url}".format(url=url, formatid=data["format_id"]))
+        print(url)
         while True:
             try:
                 system("youtube-dl --no-warnings -f {formatid} -o %(id)s.%(ext)s {url}".format(url=url, formatid=data["format_id"]))
