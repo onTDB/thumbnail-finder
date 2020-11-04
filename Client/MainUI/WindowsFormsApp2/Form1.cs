@@ -178,7 +178,7 @@ namespace WindowsFormsApp2
             {
                 if (textBox1.Text != "")
                 {
-                    if (textBox1.Text.Contains("youtu.be/")) 
+                    if (textBox1.Text.Contains("youtu.be/"))    
                     {
                         lbl_Title.Text = "";
                         if (textBox1.Text.Contains("?t="))
@@ -257,7 +257,7 @@ namespace WindowsFormsApp2
                             RecordURL();
                         }
                     }
-                    else if (textBox1.Text.Contains("youtube.com") || textBox1.Text.Contains("naver.com"))
+                    else if (textBox1.Text.Contains("youtube.com"))
                     {
                         lbl_Title.Text = "";
                         container = textBox1.Text;
@@ -336,8 +336,87 @@ namespace WindowsFormsApp2
                         }
 
                     }
+                    else if (textBox1.Text.Contains("naver.com"))
+                    {
+                        lbl_Title.Text = "";
+                        container = textBox1.Text;
+                        pictureBox1.Image = Properties.Resources.loading;
+
+                        input.Visible = false;
+                        Console.WriteLine("1단계 clickevent 발생 후 if 검사 완료.");
+                        try
+                        {
+                            postParams.Append("?url=" + container);
+                            JObject rtn = JObject.Parse(GetRtn());
+                            /*MessageBox.Show("status : " + rtn["status"].ToString());*/
+                            lbl_Title.Text = "status : " + rtn["status"].ToString();
+                            if (rtn["status"].ToString() == "200")
+                            {
+                                try
+                                {
+                                    while (true)
+                                    {
+                                        rtn1 = JObject.Parse(GetRtn1());
+
+                                        if (rtn1["status"].ToString() == "200")
+                                        {
+                                            /*MessageBox.Show("status : " + rtn1["data"]["timestampMinSec"].ToString() + "\n분석 진행중");*/
+                                            //lbl_Title.Text = "분석 진행중";
+                                            break;
+                                        }
+                                        else if (rtn1["status"].ToString() == "503")
+                                        {
+                                            System.Threading.Thread.Sleep(5000);
+                                            lbl_Title.Text = "분석 진행중 ...";
+                                            Console.WriteLine("503");
+                                        }
+                                        else
+                                        {
+                                            MessageBox.Show("서버에 문제 발생" + rtn["line"]);
+                                            break;
+                                        }
+
+                                    }
+
+                                }
+                                catch (Exception ex)
+                                {
+                                    MessageBox.Show(ex.ToString());
+                                }
+                            }
+                            else
+                            {
+                                MessageBox.Show("서버에 문제 발생" + rtn["line"]);
+                            }
+                            postDataStream.Close();
+                            input.Visible = true;
+                        }
+                        catch (Exception ex)
+                        {
+                            MessageBox.Show(ex.ToString());
+                        }
+                        finally
+                        {
+                            Console.WriteLine(rtn1);
+                            Reconnect.Visible = true;
+                            returnURL = container.Substring(container.IndexOf("=") + 1) + "?t=" + rtn1["data"]["timestamp"].ToString();
+                            //JObject SaveUrl = new JObject(new JProperty("url", returnURL));
+                            //File.WriteAllText(Directory.GetCurrentDirectory(), SaveUrl.ToString());
+                            //returnThumbnailurl = (rtn1["data"]["videodata"]["thumbnail"]).ToString().Split('?')[0];
+                            returnThumbnailurl = rtn1["data"]["youtube-dl-data"]["thumbnails"][0]["url"].ToString().Split('?')[0];
+                            returnTitle = (rtn1["data"]["youtube-dl-data"]["title"]).ToString();
+                            lbl_Title.Text = returnTitle;
+                            linkLabel1.Text = returnURL;
+                            pictureBox1.ImageLocation = returnThumbnailurl;
+                            process = Process.Start(returnURL);
+                            textBox1.Text = null;
+                            DownImg((rtn1["data"]["youtube-dl-data"]["id"]).ToString());
+                            RecordURL();
+                        }
+                    }
+
+                    else Console.WriteLine("textbox1 == null");
                 }
-                else Console.WriteLine("textbox1 == null");
             }
             catch (Exception ex)
             {
@@ -374,12 +453,12 @@ namespace WindowsFormsApp2
             lisboxChecker = true;
             button1.Enabled = true;
             lbl_Title.Text = "";
+            linkLabel1.Text = listBox1.Items[listBox1.SelectedIndex].ToString(); ;
             Console.WriteLine(listBox1.SelectedIndex);
             string[] img = File.ReadAllLines(imagePath);
             int i = File.ReadAllLines(imagePath).Count();
             Console.WriteLine(i);
-            Console.WriteLine(img[listBox1.SelectedIndex].ToString());
-            
+            Console.WriteLine(img[listBox1.SelectedIndex].ToString());            
             pictureBox1.ImageLocation = img[listBox1.SelectedIndex].ToString();
         }
 

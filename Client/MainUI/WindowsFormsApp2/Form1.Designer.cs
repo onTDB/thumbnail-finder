@@ -108,6 +108,7 @@
             this.Reconnect.TabIndex = 3;
             this.Reconnect.Text = "Reconnect";
             this.Reconnect.UseVisualStyleBackColor = true;
+            this.Reconnect.Visible = false;
             this.Reconnect.Click += new System.EventHandler(this.Reconnect_Click);
             // 
             // textBox1
