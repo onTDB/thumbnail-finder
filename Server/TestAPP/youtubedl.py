@@ -56,7 +56,12 @@ class ytdl(Exception):
         #        break
         #
         #self.storage.debuglogger(ip=ip, desc="Parse FPS OK", code=200)
-        data = turl["formats"][len(turl["formats"])-1]
+        if len(turl["formats"]) == 1: q=len(turl["formats"])-1
+        elif len(turl["formats"]) == 2: q=len(turl["formats"])-1
+        elif len(turl["formats"]) == 3: q=len(turl["formats"])-1
+        else:
+            q = len(turl["formats"])/2
+        data = turl["formats"][q]
         if "fps" in data:
             fps = data["fps"]
         else:
@@ -74,6 +79,8 @@ class ytdl(Exception):
         print(url)
         while True:
             try:
+                if "youtube.com" in url:
+                    system("youtube-dl --no-warnings -f 134 -o %(id)s.%(ext)s {url}".format(url=url))
                 system("youtube-dl --no-warnings -f {formatid} -o %(id)s.%(ext)s {url}".format(url=url, formatid=data["format_id"]))
             except:
                 self.storage.logger(ip=ip, desc="Error to Download Video.", code=503)
@@ -100,7 +107,6 @@ class ytdl(Exception):
         while True:
             try:
                 turl = youtube_dl.YoutubeDL({}).extract_info(url, download=False)
-                print("OK")
                 return turl["id"], turl
             except youtube_dl.utils.DownloadError:
                 pass
