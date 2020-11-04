@@ -37,15 +37,11 @@ class ytdl(Exception):
                 try:
                     turl = youtube_dl.YoutubeDL({}).extract_info(url, download=False)
                     break
-                except youtube_dl.utils.DownloadError:
+                except youtube_dl.utils.ExtractorError:
                     return 0, 0
                 except:
                     pass
         self.storage.debuglogger(ip=ip, desc="Get video info OK", code=200)
-
-        print("\n\n")
-        print(turl)
-
         fps = self.movie(url, turl, ip)
         self.thumbnail(url, turl, ip)
         return fps, turl
@@ -60,8 +56,7 @@ class ytdl(Exception):
         #        break
         #
         #self.storage.debuglogger(ip=ip, desc="Parse FPS OK", code=200)
-
-        data = turl[len(turl["formats"])-1]
+        data = turl["formats"][len(turl["formats"])-1]
         if "fps" in data:
             fps = data["fps"]
         else:
@@ -98,11 +93,15 @@ class ytdl(Exception):
     
     def checkurl(self, url, ip):
         import youtube_dl
+        
         while True:
             try:
                 turl = youtube_dl.YoutubeDL({}).extract_info(url, download=False)
+                print("OK")
                 return turl["id"], turl
             except youtube_dl.utils.DownloadError:
+                pass
+            except youtube_dl.utils.ExtractorError:
                 raise SyntaxError
             except:
                 pass
