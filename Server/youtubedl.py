@@ -56,17 +56,26 @@ class ytdl(Exception):
         #        break
         #
         #self.storage.debuglogger(ip=ip, desc="Parse FPS OK", code=200)
-        if len(turl["formats"]) == 1: q=len(turl["formats"])-1
-        elif len(turl["formats"]) == 2: q=len(turl["formats"])-1
-        elif len(turl["formats"]) == 3: q=len(turl["formats"])-1
+        if "youtube.com" in url: 
+            for i in turl["formats"]:
+                if i["format_id"] == '134':
+                    data = i
+                    break
+        if "youtu.be" in url: 
+            for i in turl["formats"]:
+                if i["format_id"] == '134':
+                    data = i
+                    break
         else:
-            q = len(turl["formats"])/2
-        data = turl["formats"][q]
+            if len(turl["formats"]) == 1: data = turl["formats"][len(turl["formats"])-1]
+            elif len(turl["formats"]) == 2: data = turl["formats"][len(turl["formats"])-1]
+            elif len(turl["formats"]) == 3: data = turl["formats"][len(turl["formats"])-1]
+            else:
+                data = turl["formats"][int(len(turl["formats"])/2)]
         if "fps" in data:
             fps = data["fps"]
         else:
             fps = None
-        
         
         #if data == None: raise SyntaxError
         #f = open(yturl+".mp4", "wb")
