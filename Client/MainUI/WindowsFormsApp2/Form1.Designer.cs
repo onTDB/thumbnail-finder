@@ -134,8 +134,8 @@
             // panel1
             // 
             this.panel1.BackColor = System.Drawing.SystemColors.ActiveBorder;
-            this.panel1.Controls.Add(this.linkLabel1);
             this.panel1.Controls.Add(this.lbl_Title);
+            this.panel1.Controls.Add(this.linkLabel1);
             this.panel1.Controls.Add(this.pictureBox1);
             this.panel1.Location = new System.Drawing.Point(468, 6);
             this.panel1.Name = "panel1";
@@ -157,7 +157,7 @@
             // 
             this.lbl_Title.Location = new System.Drawing.Point(5, 8);
             this.lbl_Title.Name = "lbl_Title";
-            this.lbl_Title.Size = new System.Drawing.Size(424, 27);
+            this.lbl_Title.Size = new System.Drawing.Size(424, 38);
             this.lbl_Title.TabIndex = 10;
             this.lbl_Title.Text = "제목  ";
             // 

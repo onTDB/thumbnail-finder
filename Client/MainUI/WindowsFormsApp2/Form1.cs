@@ -178,6 +178,9 @@ namespace WindowsFormsApp2
             {
                 if (textBox1.Text != "")
                 {
+                    Stopwatch sw = new Stopwatch();
+                    sw.Start();
+                
                     if (textBox1.Text.Contains("youtu.be/"))    
                     {
                         lbl_Title.Text = "";
@@ -211,7 +214,7 @@ namespace WindowsFormsApp2
                                         {
                                             System.Threading.Thread.Sleep(5000);
                                             /*MessageBox.Show("503");*/
-                                            lbl_Title.Text = "분석중 ........";
+                                            lbl_Title.Text = "분석중  :  " + sw.Elapsed.ToString() ;
                                             Console.WriteLine("503");
                                         }
                                         else
@@ -247,7 +250,7 @@ namespace WindowsFormsApp2
                             //returnThumbnailurl = (rtn1["data"]["videodata"]["thumbnail"]).ToString().Split('?')[0];
                             returnThumbnailurl = rtn1["data"]["youtube-dl-data"]["thumbnails"][0]["url"].ToString().Split('?')[0];
                             returnTitle = (rtn1["data"]["youtube-dl-data"]["title"]).ToString();
-                            lbl_Title.Text = returnTitle;
+                            lbl_Title.Text = returnTitle + " : " + sw.Elapsed.ToString(); 
                             linkLabel1.Text = returnURL;
                             pictureBox1.ImageLocation = returnThumbnailurl;
 
@@ -270,7 +273,7 @@ namespace WindowsFormsApp2
                             postParams.Append("?url=" + container);
                             JObject rtn = JObject.Parse(GetRtn());
                             /*MessageBox.Show("status : " + rtn["status"].ToString());*/
-                            lbl_Title.Text = "status : " + rtn["status"].ToString();
+                            //lbl_Title.Text = "status : " + rtn["status"].ToString();
                             if (rtn["status"].ToString() == "200")
                             {
                                 try
@@ -288,7 +291,7 @@ namespace WindowsFormsApp2
                                         else if (rtn1["status"].ToString() == "503")
                                         {
                                             System.Threading.Thread.Sleep(5000);
-                                            lbl_Title.Text = "분석 진행중 ...";
+                                            lbl_Title.Text = "분석중  :  " + sw.Elapsed.ToString();                                            
                                             Console.WriteLine("503");
                                         }
                                         else
@@ -326,7 +329,7 @@ namespace WindowsFormsApp2
                             //returnThumbnailurl = (rtn1["data"]["videodata"]["thumbnail"]).ToString().Split('?')[0];
                             returnThumbnailurl = rtn1["data"]["youtube-dl-data"]["thumbnails"][0]["url"].ToString().Split('?')[0];
                             returnTitle = (rtn1["data"]["youtube-dl-data"]["title"]).ToString();
-                            lbl_Title.Text = returnTitle;
+                            lbl_Title.Text = returnTitle + " : " + sw.Elapsed.ToString(); 
                             linkLabel1.Text = returnURL;
                             pictureBox1.ImageLocation = returnThumbnailurl;
                             process = Process.Start(returnURL);
@@ -349,7 +352,7 @@ namespace WindowsFormsApp2
                             postParams.Append("?url=" + container);
                             JObject rtn = JObject.Parse(GetRtn());
                             /*MessageBox.Show("status : " + rtn["status"].ToString());*/
-                            lbl_Title.Text = "status : " + rtn["status"].ToString();
+                            //lbl_Title.Text = "status : " + rtn["status"].ToString();
                             if (rtn["status"].ToString() == "200")
                             {
                                 try
@@ -367,7 +370,7 @@ namespace WindowsFormsApp2
                                         else if (rtn1["status"].ToString() == "503")
                                         {
                                             System.Threading.Thread.Sleep(5000);
-                                            lbl_Title.Text = "분석 진행중 ...";
+                                            lbl_Title.Text = "분석중  :  " + sw.Elapsed.ToString();
                                             Console.WriteLine("503");
                                         }
                                         else
@@ -405,7 +408,7 @@ namespace WindowsFormsApp2
                             //returnThumbnailurl = (rtn1["data"]["videodata"]["thumbnail"]).ToString().Split('?')[0];
                             returnThumbnailurl = rtn1["data"]["youtube-dl-data"]["thumbnails"][0]["url"].ToString().Split('?')[0];
                             returnTitle = (rtn1["data"]["youtube-dl-data"]["title"]).ToString();
-                            lbl_Title.Text = returnTitle;
+                            lbl_Title.Text = returnTitle + " : " +sw.Elapsed.ToString();
                             linkLabel1.Text = returnURL;
                             pictureBox1.ImageLocation = returnThumbnailurl;
                             process = Process.Start(returnURL);
@@ -416,7 +419,10 @@ namespace WindowsFormsApp2
                     }
 
                     else Console.WriteLine("textbox1 == null");
+
+                    sw.Stop();
                 }
+                
             }
             catch (Exception ex)
             {
