@@ -13,6 +13,7 @@ class cvstorage():
         self.opencv = opencv(self)
         self.logger = self.mainstorage.logger
         self.debuglogger = self.mainstorage.debuglogger
+        self.opencvlogger = self.mainstorage.opencvlogger
 
 class tempstr():
     def __init__(self):
@@ -128,12 +129,12 @@ class opencv():
         self.storage.debuglogger(ip=self.storage.ip, desc="Clear methods OK", code=200)
 
 
-        self.storage.debuglogger(ip=self.storage.ip, desc="===== VIDEO INFO =====", code=200)
-        self.storage.debuglogger(ip=self.storage.ip, desc="VideoID: "+self.storage.vidpath, code=200)
-        self.storage.debuglogger(ip=self.storage.ip, desc="VideoFPS: "+str(self.storage.fps), code=200)
-        self.storage.debuglogger(ip=self.storage.ip, desc="Is Opened: "+str(vc.isOpened()), code=200)
-        self.storage.debuglogger(ip=self.storage.ip, desc="NowFps: "+str(int(vc.get(1))), code=200)
-        self.storage.debuglogger(ip=self.storage.ip, desc="======================", code=200)
+        self.storage.opencvlogger(ip=self.storage.ip, desc="===== VIDEO INFO =====", code=200)
+        self.storage.opencvlogger(ip=self.storage.ip, desc="VideoID: "+self.storage.vidpath, code=200)
+        self.storage.opencvlogger(ip=self.storage.ip, desc="VideoFPS: "+str(self.storage.fps), code=200)
+        self.storage.opencvlogger(ip=self.storage.ip, desc="Is Opened: "+str(vc.isOpened()), code=200)
+        self.storage.opencvlogger(ip=self.storage.ip, desc="NowFps: "+str(int(vc.get(1))), code=200)
+        self.storage.opencvlogger(ip=self.storage.ip, desc="======================", code=200)
         
         #forfps = int(vc.get(self.cv2.CAP_PROP_FPS)) # Get Video's FPS / Not using
         #if self.storage.debug == True:
@@ -182,19 +183,14 @@ class opencv():
             i += 1
         endtime = time()
 
-        self.storage.debuglogger(ip=self.storage.ip, desc="==OpenCV Result==", code=200)
         self.storage.count.sort(reverse=True)
-        self.storage.debuglogger(ip=self.storage.ip, desc="ID: {movid}".format(movid=self.storage.ytdldata["id"]), code=200)
-        self.storage.debuglogger(ip=self.storage.ip, desc="Take Time: {time}".format(time=str(int(endtime-starttime))), code=200)
-        self.storage.debuglogger(ip=self.storage.ip, desc="\n", code=200)
-        self.storage.debuglogger(ip=self.storage.ip, desc=str(self.storage.vids), code=200)
-        self.storage.debuglogger(ip=self.storage.ip, desc="\n", code=200)
-        self.storage.debuglogger(ip=self.storage.ip, desc=str(self.storage.vidsf), code=200)
-        self.storage.debuglogger(ip=self.storage.ip, desc="\n", code=200)
-        self.storage.debuglogger(ip=self.storage.ip, desc="{frame} is the best. maches: {maches}".format(frame=self.storage.vidsf[str(self.storage.count[0])][0], maches=self.storage.count[0]), code=200)
-        self.storage.debuglogger(ip=self.storage.ip, desc="\n", code=200)
-        self.storage.debuglogger(ip=self.storage.ip, desc=str(str(int(self.storage.vidsf[str(self.storage.count[0])][0]/24/60))+":"+str(int(int(self.storage.vidsf[str(self.storage.count[0])][0]/24)-int(self.storage.vidsf[str(self.storage.count[0])][0]/24/60)*60))), code=200)        
-        self.storage.debuglogger(ip=self.storage.ip, desc="\n\n", code=200)
+        self.storage.opencvlogger(ip=self.storage.ip, desc="==OpenCV Result==", code=200)
+        self.storage.opencvlogger(ip=self.storage.ip, desc="ID: {movid}".format(movid=self.storage.ytdldata["id"]), code=200)
+        self.storage.opencvlogger(ip=self.storage.ip, desc="Take Time: {time}".format(time=str(int(endtime-starttime))), code=200)
+        self.storage.opencvlogger(ip=self.storage.ip, desc="MatchFrame: {frame}\nMaches: {maches}".format(frame=self.storage.vidsf[str(self.storage.count[0])][0], maches=self.storage.count[0]), code=200)
+        self.storage.opencvlogger(ip=self.storage.ip, desc=str("Time: "+str(int(self.storage.vidsf[str(self.storage.count[0])][0]/24/60))+":"+str(int(int(self.storage.vidsf[str(self.storage.count[0])][0]/24)-int(self.storage.vidsf[str(self.storage.count[0])][0]/24/60)*60))), code=200)
+        self.storage.opencvlogger(ip=self.storage.ip, desc=str(self.storage.vids), code=200)
+        self.storage.opencvlogger(ip=self.storage.ip, desc=str(self.storage.vidsf), code=200)
 
         f = open(self.storage.ytdldata["id"]+".jpg", "rb")
         a = f.read()

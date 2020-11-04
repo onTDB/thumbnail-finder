@@ -67,6 +67,13 @@ class Storage(Exception):
 
         pass
 
+    def opencvlogger(self, ip, desc, code):
+        import time
+        if self.debug == True: print("{ip} - - {time} || DEBUG || {desc} {code} -".format(ip=ip, desc=desc, time=time.strftime('[%Y/%m/%d %H:%M:%S] ', time.localtime(time.time())), code=str(code)))
+        self.logsave(desc="{ip} - - {time} {desc} {code} -".format(ip=ip, desc=desc, time=time.strftime('[%Y/%m/%d %H:%M:%S] ', time.localtime(time.time())), code=str(code)), code=code)
+        pass
+
+
     def logsave(self, desc, code, frame=None):
         #from os import system
         #system('echo "{desc}" >> debug.log'.format(desc=desc))
