@@ -37,7 +37,7 @@ namespace WindowsFormsApp2
             this.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             //this.FormBorderStyle = FormBorderStyle.None;
             //this.TopMost = true;
-            this.Reconnect.Visible = false;
+            //this.Reconnect.Visible = false;
             pictureBox1.ImageLocation = "https://i.ytimg.com/vi_webp/gdZLi9oWNZg/maxresdefault.webp?v=5f3f4882";
             string[] cont = File.ReadAllLines(path);
             foreach(string i in cont)
