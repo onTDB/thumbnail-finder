@@ -2,6 +2,7 @@
 class cvstorage():
     def __init__(self, sto, thumbnailpath, vidpath, fps, ip, turl):
         self.threaded = True
+        self.devidefps = 3
 
         self.ytdldata = turl
         self.ip = ip
@@ -161,7 +162,7 @@ class opencv():
                 #self.storage.debuglogger(ip=self.storage.ip, desc="NowFps: "+str(int(vc.get(1))), code=200)
 
 
-                if (int(vc.get(1)) % int(self.storage.fps/3) == 0): 
+                if (int(vc.get(1)) % int(self.storage.fps/self.storage.devidefps) == 0): 
                     #self.storage.debuglogger(ip=self.storage.ip, desc="===== FPS INFO =====", code=200)
                     #self.storage.debuglogger(ip=self.storage.ip, desc="VideoFPS: "+str(self.storage.fps), code=200)
                     #elf.storage.debuglogger(ip=self.storage.ip, desc="NowFps: "+str(int(vc.get(1))), code=200)
@@ -187,7 +188,7 @@ class opencv():
             while True:
                 ret, img = vc.read()
 
-                if (int(vc.get(1)) % int(self.storage.fps/3) == 0): self.core(self.storage, img, vc.get(1),)
+                if (int(vc.get(1)) % int(self.storage.fps/self.storage.devidefps) == 0): self.core(self.storage, img, vc.get(1),)
                 if int(vc.get(1)) == int(vc.get(self.cv2.CAP_PROP_FRAME_COUNT)): break
 
         endtime = time()
