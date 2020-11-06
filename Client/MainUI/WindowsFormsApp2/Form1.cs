@@ -433,9 +433,10 @@ namespace WindowsFormsApp2
 
         private void Reconnect_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("연결을 재설정 합니다...\nPress Enter");
+            //MessageBox.Show("연결을 재설정 합니다...\nPress Enter");
 
             //process = Process.Start(returnURL);
+            textBox1.Visible = true;
 
         }
         public Stream postDataStream;

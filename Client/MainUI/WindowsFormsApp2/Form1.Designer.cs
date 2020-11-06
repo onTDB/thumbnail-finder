@@ -38,8 +38,8 @@
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.linkLabel1 = new System.Windows.Forms.LinkLabel();
             this.lbl_Title = new System.Windows.Forms.Label();
+            this.linkLabel1 = new System.Windows.Forms.LinkLabel();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -62,7 +62,7 @@
             this.button1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(116, 39);
-            this.button1.TabIndex = 6;
+            this.button1.TabIndex = 5;
             this.button1.Text = "Select And GO";
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click_1);
@@ -84,7 +84,7 @@
             this.input.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.input.Name = "input";
             this.input.Size = new System.Drawing.Size(120, 60);
-            this.input.TabIndex = 1;
+            this.input.TabIndex = 2;
             this.input.Text = "GO";
             this.input.UseVisualStyleBackColor = false;
             this.input.Click += new System.EventHandler(this.button1_Click);
@@ -96,7 +96,7 @@
             this.label1.Location = new System.Drawing.Point(0, 13);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(145, 71);
-            this.label1.TabIndex = 2;
+            this.label1.TabIndex = 0;
             this.label1.Text = "url";
             // 
             // Reconnect
@@ -105,7 +105,7 @@
             this.Reconnect.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.Reconnect.Name = "Reconnect";
             this.Reconnect.Size = new System.Drawing.Size(107, 41);
-            this.Reconnect.TabIndex = 3;
+            this.Reconnect.TabIndex = 0;
             this.Reconnect.Text = "Reconnect";
             this.Reconnect.UseVisualStyleBackColor = true;
             this.Reconnect.Visible = false;
@@ -119,7 +119,7 @@
             this.textBox1.Multiline = true;
             this.textBox1.Name = "textBox1";
             this.textBox1.Size = new System.Drawing.Size(328, 113);
-            this.textBox1.TabIndex = 0;
+            this.textBox1.TabIndex = 1;
             // 
             // label3
             // 
@@ -128,7 +128,7 @@
             this.label3.Location = new System.Drawing.Point(6, 183);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(130, 32);
-            this.label3.TabIndex = 10;
+            this.label3.TabIndex = 0;
             this.label3.Text = "History";
             // 
             // panel1
@@ -142,24 +142,24 @@
             this.panel1.Size = new System.Drawing.Size(435, 316);
             this.panel1.TabIndex = 11;
             // 
+            // lbl_Title
+            // 
+            this.lbl_Title.Location = new System.Drawing.Point(5, 8);
+            this.lbl_Title.Name = "lbl_Title";
+            this.lbl_Title.Size = new System.Drawing.Size(424, 38);
+            this.lbl_Title.TabIndex = 0;
+            this.lbl_Title.Text = "제목  ";
+            // 
             // linkLabel1
             // 
             this.linkLabel1.AutoSize = true;
             this.linkLabel1.Location = new System.Drawing.Point(5, 289);
             this.linkLabel1.Name = "linkLabel1";
             this.linkLabel1.Size = new System.Drawing.Size(28, 15);
-            this.linkLabel1.TabIndex = 12;
+            this.linkLabel1.TabIndex = 6;
             this.linkLabel1.TabStop = true;
             this.linkLabel1.Text = "link";
             this.linkLabel1.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel1_LinkClicked);
-            // 
-            // lbl_Title
-            // 
-            this.lbl_Title.Location = new System.Drawing.Point(5, 8);
-            this.lbl_Title.Name = "lbl_Title";
-            this.lbl_Title.Size = new System.Drawing.Size(424, 38);
-            this.lbl_Title.TabIndex = 10;
-            this.lbl_Title.Text = "제목  ";
             // 
             // pictureBox1
             // 
