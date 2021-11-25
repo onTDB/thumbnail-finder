@@ -1,5 +1,5 @@
-opencv-contrib-python==3.4.2.16
-opencv-python==3.4.2.16
+opencv-contrib-python==3.4.8.29
+opencv-python==3.4.8.29
 flask_compress
 youtube-dl
 requests
