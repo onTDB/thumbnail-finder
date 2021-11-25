@@ -10,7 +10,7 @@ class Storage(Exception):
         self.server = server(self)
         self.debug = True
         self.cv2 = cv2
-        self.sift = cv2.xfeatures2d.SIFT_create()
+        self.sift = cv2.SIFT_create()
         self.ytdl = ytdl(self)
         self.now = []
         self.threads = {}

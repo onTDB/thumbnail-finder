@@ -69,7 +69,7 @@ namespace WindowsFormsApp2
         public string GetRtn()
         {
             byte[] result = Encoding.UTF8.GetBytes(postParams.ToString());
-            HttpWebRequest wReq = (HttpWebRequest)WebRequest.Create("http://xnglwmx.purl.zz.am:8080/act?url=" + container);
+            HttpWebRequest wReq = (HttpWebRequest)WebRequest.Create("http://localhost:8080/act?url=" + container);
             wReq.Method = "POST";
             wReq.ContentType = "application/x-www-form-urlencoded";
             wReq.ContentLength = result.Length;
@@ -87,7 +87,7 @@ namespace WindowsFormsApp2
         }
         public string GetRtn1()
         {
-            HttpWebRequest wReq1 = (HttpWebRequest)WebRequest.Create("http://xnglwmx.purl.zz.am:8080/rtn?url=" + container);
+            HttpWebRequest wReq1 = (HttpWebRequest)WebRequest.Create("http://localhost:8080/rtn?url=" + container);
 
             wReq1.Method = "POST";
             wReq1.ContentType = "application/x-www-form-urlencoded";

@@ -18,7 +18,7 @@ class tempstr():
     def __init__(self):
         import cv2
         self.cv2 = cv2
-        self.sift = cv2.xfeatures2d.SIFT_create()
+        self.sift = cv2.SIFT_create()
 
 class storage():
     def __init__(self, thumbnailpath, vidpath):
