@@ -4,7 +4,7 @@ class Storage(Exception):
         from youtubedl import ytdl
         import logging
         import cv2
-        self.save = True
+        self.issave = True
         self.logging = logging
         self.logging.basicConfig(filename='debug.log', level=logging.DEBUG)
         self.storage = self
@@ -18,7 +18,7 @@ class Storage(Exception):
         pass
     
     def save(self, movid, arg, ip):
-        if self.save == False: return 2
+        if self.issave == False: return 2
         from json import loads, dumps
         from os.path import isfile
         if isfile("data.json"): 
@@ -38,7 +38,7 @@ class Storage(Exception):
         f.close()
     
     def search(self, movid, ip):
-        if self.save == False: return {"status": 404, "line": "movie information is not found."}
+        if self.issave == False: return {"status": 404, "line": "movie information is not found."}
         from json import loads
         from os.path import isfile
         if isfile("data.json"): 
@@ -168,10 +168,10 @@ if __name__ == '__main__':
         if url == "q": break
         r = storage.server.processstarter(url, "standalone")
         if r["status"] != 200: print(r["line"])
+        elif storage.issave == False: continue
         else:
             while True:
                 r = storage.server.movtimestampsearch(url, "standalone")
                 if r["status"] == 200: break
                 sleep(5)
             
-        
