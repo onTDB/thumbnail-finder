@@ -6,8 +6,8 @@ class ytdl(Exception):
         self.storage = storage
     
     def download(self, yturl, ip):
-        import youtube_dl
-        self.storage.debuglogger(ip=ip, desc="Import youtube_dl OK", code=200)
+        import yt_dlp
+        self.storage.debuglogger(ip=ip, desc="Import yt_dlp OK", code=200)
         #try:
         #    self.storage.debuglogger(ip=ip, desc="Start to get video info", code=200)
         #    turl = youtube_dl.YoutubeDL({}).extract_info("https://youtu.be/"+yturl, download=False)
@@ -34,7 +34,7 @@ class ytdl(Exception):
         #    raise SyntaxError
         while True:
             try:
-                turl = youtube_dl.YoutubeDL({}).extract_info("https://youtu.be/"+yturl, download=False)
+                turl = yt_dlp.YoutubeDL({}).extract_info("https://youtu.be/"+yturl, download=False)
                 break
             except:
                 pass
@@ -68,7 +68,7 @@ class ytdl(Exception):
         self.storage.debuglogger(ip=ip, desc="Start to download video", code=200)
         while True:
             try:
-                system("youtube-dl --no-warnings -f 134 -o %(id)s.%(ext)s {url}".format(url="https://youtu.be/"+yturl))
+                system("yt-dlp --no-warnings -f 134 -o %(id)s.%(ext)s {url}".format(url="https://youtu.be/"+yturl))
             except:
                 self.storage.logger(ip=ip, desc="Error to Download Video.", code=503)
                 raise ChildProcessError
