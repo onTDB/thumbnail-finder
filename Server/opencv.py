@@ -157,6 +157,7 @@ class opencv():
                 #elf.storage.debuglogger(ip=self.storage.ip, desc="NowFps: "+str(int(vc.get(1))), code=200)
                 #print("Nowfps: "+str(vc.get(1)))
                 tmp = Thread(target=self.core, args=(self.storage, img, vc.get(1),))
+                tmp.daemon = True
                 tmp.start()
                 threads.append(tmp)
                 #self.core(self.storage, img, vc.get(1))
