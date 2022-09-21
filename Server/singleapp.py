@@ -173,5 +173,8 @@ if __name__ == '__main__':
             while True:
                 r = storage.server.movtimestampsearch(url, "standalone")
                 if r["status"] == 200: break
-                sleep(5)
+                try:
+                    sleep(5)
+                except KeyboardInterrupt:
+                    exit()
             
