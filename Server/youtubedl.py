@@ -40,9 +40,6 @@ class ytdl(Exception):
                 pass
         self.storage.debuglogger(ip=ip, desc="Get video info OK", code=200)
 
-        print("\n\n")
-        print(turl)
-
         fps = self.movie(yturl, turl, ip)
         self.thumbnail(yturl, turl, ip)
         return fps, turl
