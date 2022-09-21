@@ -1,4 +1,4 @@
-# thumbnail-finder v1.3
+# thumbnail-finder v1.4
 
 Thumbnail finds the thumbnail location on the video.
 this works on the youtube url.
