@@ -84,7 +84,7 @@ class ytdl(Exception):
     def thumbnail(self, yturl, turl, ip):
         from requests import get
         f = open(yturl+".jpg", "wb")
-        f.write(get(turl["thumbnails"][int(len(turl["thumbnails"]))-1]["url"]).content)
+        f.write(get(turl["thumbnail"]).content)
         f.close()
     
     def checkurl(self, url, ip):
